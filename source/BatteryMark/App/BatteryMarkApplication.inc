@@ -14,6 +14,7 @@ use \Utils\Geom\Point;
 use \Utils\Geom\Dimension;
 
 use \Woody\Components\Controls\Scrollbar;
+use \Woody\Components\Controls\Slider;
 
 class BatteryMarkApplication extends Application {
 
@@ -77,6 +78,16 @@ class BatteryMarkApplication extends Application {
     $layout->layout($this->frmTextView);
 
     $this->frmTextView->add(new Scrollbar(new Point(5, 9), new Dimension(15, 188)));
+    $this->frmTextView->add(new Slider(new Point(25, 9), new Dimension(15, 188)));
+
+    wb_set_handler($this->frmTextView->getControlID(), 'globalWinBinderEventHandler');
+
+    $tab = wb_create_control($this->window->getControlID(), TabControl, '', 10, 400, 100, 100);
+
+    wb_set_handler($tab, 'globalWinBinderEventHandler');
+
+    wb_create_control($tab, ScrollBar, '', 10, 10, 50, 20, 123);
+    wb_create_control($tab, EditBox, '', 10, 50, 50, 20, 456);
   }
 
   public function init() {
