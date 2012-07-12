@@ -10,17 +10,17 @@ use \Utils\Geom\Dimension;
 class Image extends \Woody\Components\Controls\Image {
   public function __construct(ImageResource $imageResource, Point $topLeftCorner, Dimension $dimension, array $stati) {
     parent::__construct($imageResource, $topLeftCorner, $dimension);
-    
+
     $this->stati = $stati;
   }
-  
-  
+
+
   protected function setImage() {
     $bitmap = $this->imageResource->getBitmap();
-    
+
     $width = $this->imageResource->getDimension()->width;
     $height = $this->imageResource->getDimension()->height;
-    
+
     wb_draw_rect($bitmap, 0, 0, $width, $height, 0xFFF0F0, TRUE);
 
     for($x = 0; $x < $width; $x += 20) {
@@ -37,7 +37,7 @@ var_dump($this->stati);
                 0x0000FF,
                 FALSE);
     }
-    
+
     wb_set_image($this->controlID, $bitmap);
     wb_destroy_image($bitmap);
 
