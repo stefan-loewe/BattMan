@@ -8,6 +8,7 @@ use \Woody\Components\Windows\ResizableWindow;
 use \Woody\Components\Controls\EditBox;
 use \Woody\Components\Controls\Label;
 use \Woody\Components\Controls\Frame;
+use \Woody\Components\Controls\PushButton;
 use \BatteryMark\Controls\Image;
 use \Woody\Components\Timer\Timer;
 use \Utils\Geom\Point;
@@ -74,12 +75,23 @@ class BatteryMarkApplication extends Application {
 
     $this->frmTextView->add(new Label('remaining battery time:', new Point(5, 65), new Dimension(15, 15)));
     $this->frmTextView->add($this->boxTimeLeft = new EditBox('label4', new Point(25, 65), new Dimension(15, 15)));
+    
+    $this->frmTextView->add($this->btn = new PushButton('label4', new Point(25, 65), new Dimension(15, 15)));
 
     $layout->layout($this->frmTextView);
 
-    $this->frmTextView->add(new Scrollbar(new Point(5, 9), new Dimension(15, 188)));
+    $this->frmTextView->add($scroll = new Scrollbar(new Point(5, 9), new Dimension(15, 188)));
     $this->frmTextView->add(new Slider(new Point(25, 9), new Dimension(15, 188)));
 
+    $this->btn->addActionListener(new \Woody\Event\ActionAdapter(function() {
+      $mod = new \Woody\Components\Windows\ModalDialog('MODAL?', new Point(5, 5), new Dimension(300, 200));
+      $mod->create();
+      
+      $mod->add($test = new EditBox('label3', new Point(25, 5), new Dimension(15, 15)));
+      $mod->add($test = new EditBox('label3', new Point(25, 45), new Dimension(15, 15)));
+      $mod->startEventHandler();
+    }));
+    
     wb_set_handler($this->frmTextView->getControlID(), 'globalWinBinderEventHandler');
 
     $tab = wb_create_control($this->window->getControlID(), TabControl, '', 10, 400, 100, 100);
