@@ -13,6 +13,8 @@ use \Woody\Components\Timer\Timer;
 use \Woody\Util\ImageResource;
 use \Utils\Geom\Point;
 use \Utils\Geom\Dimension;
+use \Woody\Event\WindowResizeAdapter;
+use \Woody\Event\WindowResizeEvent;
 
 class BatteryMarkApplication extends Application {
 
@@ -32,21 +34,20 @@ class BatteryMarkApplication extends Application {
 
     $this->window->create(null);
 
-    $this->window->addResizeListener(function(){
-      $originalWidth = 1024;
-      $originalHeight = 700;
-
-      $deltaWidth = wb_get_size($this->window->getControlID())[0] - $originalWidth;
-      $deltaHeight = wb_get_size($this->window->getControlID())[1] - $originalHeight;
-
+    $this->window->addWindowResizeListener(new WindowResizeAdapter(function(WindowResizeEvent $event) {
+      $delta = $event->getDeltaDimension();
+/*
       window dimension is not updated yet on window resize ... do so, and call event handler
       implement this properly, than implement spefic handling here properly
 
       also, root pane as frame still not implemented!
+*/
+      $this->frmGraphView->resizeBy(new Dimension($delta->width, $delta->height));
+      $this->imgLoadGraph->resizeBy(new Dimension($delta->width, $delta->height));
 
-      $this->frmGraphView->resizeTo(new Dimension(800 + $deltaWidth, 600 + $deltaHeight));
-      $this->imgLoadGraph->resizeTo(new Dimension(790 + $deltaWidth, 590 + $deltaHeight));
-    });
+      $this->frmGraphView->remove($this->imgLoadGraph);
+      $this->initGraphImage($this->plot($this->getGraphBitmap()));
+    }));
 
     $this->shutdownTimer = new Timer($this->getShutdownCallback(), $this->window, 1000);
 
@@ -111,6 +112,7 @@ class BatteryMarkApplication extends Application {
   }
 
   private function initGraphImage($bitmap) {
+    var_dump(time().': redraw');
     $dim = $this->frmGraphView->getDimension();
     $this->imgLoadGraph = new Image($bitmap, new Point(5, 15), new Dimension($dim->width - 10, $dim->height - 20));
     $this->frmGraphView->add($this->imgLoadGraph);
