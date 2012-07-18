@@ -36,12 +36,10 @@ class BatteryMarkApplication extends Application {
 
     $this->window->addWindowResizeListener(new WindowResizeAdapter(function(WindowResizeEvent $event) {
       $delta = $event->getDeltaDimension();
-/*
-      window dimension is not updated yet on window resize ... do so, and call event handler
-      implement this properly, than implement spefic handling here properly
 
-      also, root pane as frame still not implemented!
-*/
+      //also, root pane as frame still not implemented!
+
+      wb_refresh($this->frmTextView->getControlID());
       $this->frmGraphView->resizeBy(new Dimension($delta->width, $delta->height));
       $this->imgLoadGraph->resizeBy(new Dimension($delta->width, $delta->height));
 
@@ -81,7 +79,7 @@ class BatteryMarkApplication extends Application {
 
   private function initTextView() {
     $this->frmTextView = new Frame('', new Point(5, 5), new Dimension(200, 200));
-    $this->window->add($this->frmTextView);
+    $this->window->getRootPane()->add($this->frmTextView);
 
     $this->frmTextView->setLayout($layout = new GridLayout(6, 2, 0, 0));
 
@@ -98,15 +96,11 @@ class BatteryMarkApplication extends Application {
     $this->frmTextView->add($this->boxTimeLeft = new EditBox('label4', new Point(25, 65), new Dimension(15, 15)));
 
     $layout->layout($this->frmTextView);
-
-    wb_set_handler($this->frmTextView->getControlID(), 'globalWinBinderEventHandler');
   }
 
   private function initGraphView() {
     $this->frmGraphView = new Frame('', new Point(205, 5), new Dimension(800, 600));
-    $this->window->add($this->frmGraphView);
-
-    wb_set_handler($this->frmGraphView->getControlID(), 'globalWinBinderEventHandler');
+    $this->window->getRootPane()->add($this->frmGraphView);
 
     $this->initGraphImage($this->getGraphBitmap());
   }
