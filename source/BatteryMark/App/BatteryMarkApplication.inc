@@ -37,14 +37,19 @@ class BatteryMarkApplication extends Application {
     $this->window->addWindowResizeListener(new WindowResizeAdapter(function(WindowResizeEvent $event) {
       $delta = $event->getDeltaDimension();
 
-      //also, root pane as frame still not implemented!
+      /*root pane as frame still not implemented correctly
+        -> consider to make dependency of Window to Frame (root-panle) explicit,
+        by pasing the frame to the constructor of the window -> NO !!!
 
-      wb_refresh($this->frmTextView->getControlID());
+      --> add layout to frames aware, esp. on-resize!
+*/
+
+  //    $this->frmGraphView->refresh();
       $this->frmGraphView->resizeBy(new Dimension($delta->width, $delta->height));
       $this->imgLoadGraph->resizeBy(new Dimension($delta->width, $delta->height));
 
-      $this->frmGraphView->remove($this->imgLoadGraph);
-      $this->initGraphImage($this->plot($this->getGraphBitmap()));
+      //$this->frmGraphView->remove($this->imgLoadGraph);
+      //$this->initGraphImage($this->plot($this->getGraphBitmap()));
     }));
 
     $this->shutdownTimer = new Timer($this->getShutdownCallback(), $this->window, 1000);
@@ -136,7 +141,7 @@ class BatteryMarkApplication extends Application {
         $res->drawLine($source,
           $target,
           0x0000FF,
-          FALSE,
+          1,
           null,
           null,
           null);
@@ -147,9 +152,13 @@ class BatteryMarkApplication extends Application {
   }
 
   private function init() {
+
     $this->initTextView();
+
     $this->initGraphView();
 
+    $frm = new Frame('', new Point(5, 225), new Dimension(200, 200));
+    $this->window->getRootPane()->add($frm);
 
     // hve that as xml !?!?!
     \cStruct\cStruct::define('SystemPowerStatus', "
