@@ -9,22 +9,23 @@ use \Woody\Components\Controls\EditBox;
 use \Woody\Components\Controls\Label;
 use \Woody\Components\Controls\Frame;
 use \Woody\Components\Controls\Image;
+use \Woody\Components\Controls\ProgressBar;
 use \Woody\Components\Timer\Timer;
+use \Woody\Event\WindowResizeAdapter;
+use \Woody\Event\WindowResizeEvent;
 use \Woody\Util\ImageResource;
 use \Utils\Geom\Point;
 use \Utils\Geom\Dimension;
-use \Woody\Event\WindowResizeAdapter;
-use \Woody\Event\WindowResizeEvent;
 
 class BatteryMarkApplication extends Application {
-
-  private $frmTextView  = null;
-
-  private $frmGraphView = null;
 
   private $status       = null;
 
   private $stati        = array();
+
+  private $frmTextView  = null;
+  private $graphView = null;
+  private $barPower     = null;
 
   /**
    * This method acts as the constructor of the class.
@@ -44,12 +45,9 @@ class BatteryMarkApplication extends Application {
       --> add layout to frames aware, esp. on-resize!
 */
 
-  //    $this->frmGraphView->refresh();
-      $this->frmGraphView->resizeBy(new Dimension($delta->width, $delta->height));
+      $this->graphView->resizeBy(new Dimension($delta->width, $delta->height));
       $this->imgLoadGraph->resizeBy(new Dimension($delta->width, $delta->height));
-
-      //$this->frmGraphView->remove($this->imgLoadGraph);
-      //$this->initGraphImage($this->plot($this->getGraphBitmap()));
+      $this->barPower->moveBy(new Dimension(0, $delta->height))->resizeBy(new Dimension($delta->width, 0));
     }));
 
     $this->shutdownTimer = new Timer($this->getShutdownCallback(), $this->window, 1000);
@@ -83,106 +81,67 @@ class BatteryMarkApplication extends Application {
   }
 
   private function initTextView() {
-    $this->frmTextView = new Frame('', new Point(5, 5), new Dimension(200, 200));
+    $this->frmTextView = new Frame('', new Point(5, 5), new Dimension(300, 100));
     $this->window->getRootPane()->add($this->frmTextView);
 
-    $this->frmTextView->setLayout($layout = new GridLayout(6, 2, 0, 0));
+    $this->frmTextView->setLayout($layout = new GridLayout(4, 2, 0, 0));
 
     $this->frmTextView->add(new Label('connected to power:', new Point(5, 5), new Dimension(15, 15)));
-    $this->frmTextView->add($this->boxPower = new EditBox('label1', new Point(25, 5), new Dimension(15, 15)));
+    $this->frmTextView->add($this->txtConnectedToAC = new EditBox('', new Point(25, 5), new Dimension(15, 15)));
 
     $this->frmTextView->add(new Label('battery being charged:', new Point(5, 25), new Dimension(15, 15)));
-    $this->frmTextView->add($this->boxCharging = new EditBox('label2', new Point(25, 25), new Dimension(15, 15)));
+    $this->frmTextView->add($this->txtIsCharging = new EditBox('', new Point(25, 25), new Dimension(15, 15)));
 
     $this->frmTextView->add(new Label('remaining battery life:', new Point(5, 45), new Dimension(15, 15)));
-    $this->frmTextView->add($this->boxPercentLeft = new EditBox('label3', new Point(25, 45), new Dimension(15, 15)));
+    $this->frmTextView->add($this->txtPercentLeft = new EditBox('', new Point(25, 45), new Dimension(15, 15)));
 
     $this->frmTextView->add(new Label('remaining battery time:', new Point(5, 65), new Dimension(15, 15)));
-    $this->frmTextView->add($this->boxTimeLeft = new EditBox('label4', new Point(25, 65), new Dimension(15, 15)));
+    $this->frmTextView->add($this->txtTimeLeft = new EditBox('', new Point(25, 65), new Dimension(15, 15)));
 
     $layout->layout($this->frmTextView);
+
+    $this->txtConnectedToAC->setReadOnly(TRUE);
+    $this->txtIsCharging->setReadOnly(TRUE);
+    $this->txtPercentLeft->setReadOnly(TRUE);
+    $this->txtTimeLeft->setReadOnly(TRUE);
   }
 
   private function initGraphView() {
-    $this->frmGraphView = new Frame('', new Point(205, 5), new Dimension(800, 600));
-    $this->window->getRootPane()->add($this->frmGraphView);
+    $this->graphView = new \BatteryMark\View\GraphView();
 
-    $this->initGraphImage($this->getGraphBitmap());
-  }
-
-  private function initGraphImage($bitmap) {
-    var_dump(time().': redraw');
-    $dim = $this->frmGraphView->getDimension();
-    $this->imgLoadGraph = new Image($bitmap, new Point(5, 15), new Dimension($dim->width - 10, $dim->height - 20));
-    $this->frmGraphView->add($this->imgLoadGraph);
-  }
-
-  private function getGraphBitmap() {
-    $dim = $this->frmGraphView->getDimension();
-    $bitmap = ImageResource::create(new Dimension($dim->width - 10, $dim->height - 20));
-    $bitmap->drawRectangle(new Point(0, 0), new Dimension($dim->width - 10, $dim->height - 20), 0xFFFFFF, TRUE, null, null);
-
-    for($x = 0; $x < $this->frmGraphView->getDimension()->width; $x += 10) {
-      $bitmap->drawLine(new Point($x, 0), new Point($x, $dim->height - 20), 0xFFC0A0, FALSE, null, null, null);
-    }
-
-    return $bitmap;
-  }
-
-  private function plot($res) {
-    foreach($this->stati as $index => $status) {
-      if(isset($this->stati[$index + 1])) {
-        $width = $this->imgLoadGraph->getDimension()->width / (count($this->stati) + 1);
-
-        $height = $this->imgLoadGraph->getDimension()->height;
-
-        $source = new Point($index * $width, $height - $height * ($status / 100));
-        $target = new Point(($index + 1) * $width, $height - $height * ($this->stati[$index + 1] / 100));
-        $res->drawLine($source,
-          $target,
-          0x0000FF,
-          1,
-          null,
-          null,
-          null);
-      }
-    }
-
-    return $res;
+    $this->window->getRootPane()->add($this->graphView->getFrame());
   }
 
   private function init() {
 
     $this->initTextView();
 
+    $this->barPower = new ProgressBar(new Point(305, 605), new Dimension(700, 25));
+    $this->window->getRootPane()->add($this->barPower);
+    $this->barPower->setRange(0, 100);
+
     $this->initGraphView();
 
     $frm = new Frame('', new Point(5, 225), new Dimension(200, 200));
     $this->window->getRootPane()->add($frm);
 
-    // hve that as xml !?!?!
-    \cStruct\cStruct::define('SystemPowerStatus', "
-      BYTE  ACLineStatus;
-      BYTE  BatteryFlag;
-      BYTE  BatteryLifePercent;
-      BYTE  Reserved1;
-      DWORD BatteryLifeTime;
-      DWORD BatteryFullLifeTime;");
-
-    $this->status = new \SystemPowerStatus();
 
     $this->modelUpdateTimer = new Timer(function() {
-        \WinAPI::Kernel32()->GetSystemPowerStatus($this->status);
 
-        $this->stati[] = mt_rand(0, 100);//$this->status->BatteryLifePercent;
+      $this->status = new \BatteryMark\Model\BatteryState();
 
-        $this->boxPower->setValue($this->status->ACLineStatus);
-        $this->boxCharging->setValue($this->status->BatteryFlag);
-        $this->boxPercentLeft->setValue($this->status->BatteryLifePercent);
+      $this->barPower->setProgress($this->status->getPercentRemaining());
 
-        $this->frmGraphView->remove($this->imgLoadGraph);
+      $this->stati[] = $this->status->getPercentRemaining();
 
-        $this->initGraphImage($this->plot($this->getGraphBitmap()));
+      $this->txtConnectedToAC->setValue($this->status->getPowerStatus());
+      $this->txtIsCharging->setValue($this->status->getBatteryStatus());
+      $this->txtPercentLeft->setValue($this->status->getPercentRemaining());
+      $this->txtTimeLeft->setValue($this->status->getTimeRemaining());
+
+      $this->graphView->remove($this->imgLoadGraph);
+
+      $this->graphView->update($this->status);
     }, $this->window, 1000);
 
     $this->modelUpdateTimer->start();
