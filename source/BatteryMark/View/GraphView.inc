@@ -2,51 +2,114 @@
 
 namespace BatteryMark\View;
 
+use \Woody\Components\Controls\Frame;
+use \Woody\Components\Controls\Image;
+use \Woody\Util\ImageResource;
+use \Utils\Geom\Point;
+use \Utils\Geom\Dimension;
+
 class GraphView {
 
+  private $frame        = null;
+
+  private $frmDimension = null;
+
+  private $imgGraph     = null;
+
+  private $imgDimension = null;
+
+  private $states       = null;
+
   public function __construct() {
-    $this->frame = new Frame('', new Point(305, 5), new Dimension(700, 600));
+    $this->frmDimension = new Dimension(700, 600);
+    $this->imgInset     = new Dimension(-10, -20);
+    $this->imgDimension = $this->frmDimension->resizeBy($this->imgInset);
 
-    $this->initGraphImage($this->getGraphBitmap());
+    $this->frame        = new Frame('', new Point(305, 5), $this->frmDimension);
   }
 
-  private function initGraphImage($bitmap) {
-    $dim = $this->graphView->getDimension();
-    $this->imgLoadGraph = new Image($bitmap, new Point(5, 15), new Dimension($dim->width - 10, $dim->height - 20));
-    $this->graphView->add($this->imgLoadGraph);
+  public function initialize() {
+    $this->initializeGraphImage($this->initializeBitmap());
+
+    $this->states = new \ArrayObject();
   }
 
-  private function getGraphBitmap() {
-    $dim = $this->graphView->getDimension();
-    $bitmap = ImageResource::create(new Dimension($dim->width - 10, $dim->height - 20));
-    $bitmap->drawRectangle(new Point(0, 0), new Dimension($dim->width - 10, $dim->height - 20), 0xFFFFFF, TRUE, null, null);
+  private function initializeGraphImage($bitmap) {
+    $this->imgGraph = new Image($bitmap, new Point(5, 15), $this->frmDimension->resizeBy($this->imgInset));
 
-    for($x = 0; $x < $this->graphView->getDimension()->width; $x += 10) {
-      $bitmap->drawLine(new Point($x, 0), new Point($x, $dim->height - 20), 0xFFC0A0, FALSE, null, null, null);
+    $this->frame->add($this->imgGraph);
+  }
+
+  private function initializeBitmap() {
+    $bitmap = ImageResource::create($this->frmDimension->resizeBy($this->imgInset));
+    $bitmap->drawRectangle(new Point(0, 0), $this->frmDimension->resizeBy($this->imgInset), 0xFFFFFF);
+
+    for($x = 0; $x < $this->frame->getDimension()->width; $x += 10) {
+      $source = new Point($x, 0);
+      $target = new Point($x, $this->frmDimension->height - $this->imgInset->height);
+      $bitmap->drawLine($source, $target, 0xFFC0A0);
     }
 
     return $bitmap;
   }
 
-  private function update($res) {
-    foreach($this->stati as $index => $status) {
-      if(isset($this->stati[$index + 1])) {
-        $width = $this->imgLoadGraph->getDimension()->width / (count($this->stati) + 1);
+  public function update(\BatteryMark\Model\BatteryState $currentState) {
+    $this->purge();
 
-        $height = $this->imgLoadGraph->getDimension()->height;
+    //$this->states[] = mt_rand(0, 100);
+    $this->states[] = $currentState;
 
-        $source = new Point($index * $width, $height - $height * ($status / 100));
-        $target = new Point(($index + 1) * $width, $height - $height * ($this->stati[$index + 1] / 100));
-        $res->drawLine($source,
-          $target,
-          0x0000FF,
-          1,
-          null,
-          null,
-          null);
+    $bitmap         = $this->initializeBitmap();
+
+    $imageDimension = $this->frmDimension->resizeBy($this->imgInset);
+    $stepWidth      = $imageDimension->width / (count($this->states) + 1);
+    $stepHeight     = $imageDimension->height / 100;
+
+    foreach($this->states as $index => $currentState) {
+      if($index > 0) {
+        //$source = new Point(($index - 1) * $stepWidth, $stepHeight * (100 - $previousState));
+        //$target = new Point($index * $stepWidth, $stepHeight * (100 - $currentState));
+
+        $source = new Point(($index - 1) * $stepWidth, $stepHeight * (100 - $previousState->getPercentRemaining()));
+        $target = new Point($index * $stepWidth, $stepHeight * (100 - $currentState->getPercentRemaining()));
+
+        $bitmap->drawLine($source, $target, 0x0000FF, 1);
+      }
+
+      $previousState = $currentState;
+    }
+
+    $this->frame->remove($this->imgGraph);
+    $this->imgGraph = new Image($bitmap, new Point(5, 15), $imageDimension);
+    $this->frame->add($this->imgGraph);
+  }
+
+  public function getFrame() {
+    return $this->frame;
+  }
+
+  private function purge() {
+    if($this->states->count() < 50) {
+      return;
+    }
+
+    $temp = new \ArrayObject();
+
+    foreach($this->states as $index => $entry) {
+      if($index % 2 === 0) {
+        $temp[] = $entry;
       }
     }
 
-    return $res;
+    $this->states = $temp;
+  }
+
+  public function resizeBy(Dimension $delta) {
+    $this->imgGraph->hide();
+    $this->frame->resizeBy(new Dimension($delta->width, $delta->height));
+
+    $this->frmDimension = $this->frmDimension->resizeBy(new Dimension($delta->width, $delta->height));
+    
+    return $this;
   }
 }

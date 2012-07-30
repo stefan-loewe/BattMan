@@ -2,18 +2,15 @@
 
 namespace BatteryMark\App;
 
+use \BatteryMark\Model\BatteryState;
+use \BatteryMark\View\TextView;
+use \BatteryMark\View\GraphView;
 use \Woody\App\Application;
-use \Woody\Layouts\GridLayout;
 use \Woody\Components\Windows\ResizableWindow;
-use \Woody\Components\Controls\EditBox;
-use \Woody\Components\Controls\Label;
-use \Woody\Components\Controls\Frame;
-use \Woody\Components\Controls\Image;
 use \Woody\Components\Controls\ProgressBar;
 use \Woody\Components\Timer\Timer;
 use \Woody\Event\WindowResizeAdapter;
 use \Woody\Event\WindowResizeEvent;
-use \Woody\Util\ImageResource;
 use \Utils\Geom\Point;
 use \Utils\Geom\Dimension;
 
@@ -21,11 +18,11 @@ class BatteryMarkApplication extends Application {
 
   private $status       = null;
 
-  private $stati        = array();
-
-  private $frmTextView  = null;
-  private $graphView = null;
+  private $textView     = null;
+  private $graphView    = null;
   private $barPower     = null;
+  
+  private $updateTimer  = null;
 
   /**
    * This method acts as the constructor of the class.
@@ -46,7 +43,6 @@ class BatteryMarkApplication extends Application {
 */
 
       $this->graphView->resizeBy(new Dimension($delta->width, $delta->height));
-      $this->imgLoadGraph->resizeBy(new Dimension($delta->width, $delta->height));
       $this->barPower->moveBy(new Dimension(0, $delta->height))->resizeBy(new Dimension($delta->width, 0));
     }));
 
@@ -81,70 +77,73 @@ class BatteryMarkApplication extends Application {
   }
 
   private function initTextView() {
-    $this->frmTextView = new Frame('', new Point(5, 5), new Dimension(300, 100));
-    $this->window->getRootPane()->add($this->frmTextView);
+    $this->textView = new TextView();
 
-    $this->frmTextView->setLayout($layout = new GridLayout(4, 2, 0, 0));
-
-    $this->frmTextView->add(new Label('connected to power:', new Point(5, 5), new Dimension(15, 15)));
-    $this->frmTextView->add($this->txtConnectedToAC = new EditBox('', new Point(25, 5), new Dimension(15, 15)));
-
-    $this->frmTextView->add(new Label('battery being charged:', new Point(5, 25), new Dimension(15, 15)));
-    $this->frmTextView->add($this->txtIsCharging = new EditBox('', new Point(25, 25), new Dimension(15, 15)));
-
-    $this->frmTextView->add(new Label('remaining battery life:', new Point(5, 45), new Dimension(15, 15)));
-    $this->frmTextView->add($this->txtPercentLeft = new EditBox('', new Point(25, 45), new Dimension(15, 15)));
-
-    $this->frmTextView->add(new Label('remaining battery time:', new Point(5, 65), new Dimension(15, 15)));
-    $this->frmTextView->add($this->txtTimeLeft = new EditBox('', new Point(25, 65), new Dimension(15, 15)));
-
-    $layout->layout($this->frmTextView);
-
-    $this->txtConnectedToAC->setReadOnly(TRUE);
-    $this->txtIsCharging->setReadOnly(TRUE);
-    $this->txtPercentLeft->setReadOnly(TRUE);
-    $this->txtTimeLeft->setReadOnly(TRUE);
+    $this->window->getRootPane()->add($this->textView->getFrame());
+    $this->textView->initialize();
   }
 
   private function initGraphView() {
-    $this->graphView = new \BatteryMark\View\GraphView();
+    $this->graphView = new GraphView();
 
     $this->window->getRootPane()->add($this->graphView->getFrame());
+    $this->graphView->initialize();
   }
 
   private function init() {
-
     $this->initTextView();
+    $this->initGraphView();
 
     $this->barPower = new ProgressBar(new Point(305, 605), new Dimension(700, 25));
     $this->window->getRootPane()->add($this->barPower);
     $this->barPower->setRange(0, 100);
 
-    $this->initGraphView();
-
-    $frm = new Frame('', new Point(5, 225), new Dimension(200, 200));
-    $this->window->getRootPane()->add($frm);
-
-
-    $this->modelUpdateTimer = new Timer(function() {
-
-      $this->status = new \BatteryMark\Model\BatteryState();
+    $this->updateTimer = new Timer(function() {
+      $this->status = new BatteryState();
+      
+      $this->textView->update($this->status);
+      $this->graphView->update($this->status);
 
       $this->barPower->setProgress($this->status->getPercentRemaining());
-
-      $this->stati[] = $this->status->getPercentRemaining();
-
-      $this->txtConnectedToAC->setValue($this->status->getPowerStatus());
-      $this->txtIsCharging->setValue($this->status->getBatteryStatus());
-      $this->txtPercentLeft->setValue($this->status->getPercentRemaining());
-      $this->txtTimeLeft->setValue($this->status->getTimeRemaining());
-
-      $this->graphView->remove($this->imgLoadGraph);
-
-      $this->graphView->update($this->status);
     }, $this->window, 1000);
 
-    $this->modelUpdateTimer->start();
+    $this->updateTimer->start();
+    
+    
+    $slider1 = new \Woody\Components\Controls\Slider(new Point(10, 110), new Dimension(290, 25));
+    $this->window->getRootPane()->add($slider1);
+
+    $chkStayAwake = new \Woody\Components\Controls\Checkbox(0, new Point(10, 140), new Dimension(25, 25));
+    $this->window->getRootPane()->add($chkStayAwake);
+    
+    $timer = new Timer(function() use ($chkStayAwake) {
+      if($chkStayAwake->isChecked()) {
+        $libUser  = wb_load_library('Kernel32');
+        $function = wb_get_function_address('SetThreadExecutionState', $libUser);
+        wb_call_function($function, array(/*ES_DISPLAY_REQUIRED:=*/2));
+      }
+    }, $this->window, 55000);
+
+    $timer->start();
+
+    $this->timers = array();
+    $slider1->setRange(0, 20)->setValue(10)->addActionListener(new \Woody\Event\ActionAdapter(function($event) {
+
+      if(isset($this->timers[$event->getSource()->getID()]) && $this->timers[$event->getSource()->getID()]->isRunning()) {
+        var_dump("destroy");
+        $this->timers[$event->getSource()->getID()]->destroy();
+      }
+
+      $source = $event->getSource();
+      $timer = new Timer(function() use ($source) {
+        var_dump("exec");
+        exec(('powershell -executionPolicy Unrestricted -Command "function set-monitorBrightness {  [CmdletBinding()] param ( [ValidateRange(0,100)] [int]$brightness ) $monitors = Get-WmiObject -Namespace root\wmi -Class WmiMonitorBrightnessMethods; foreach ($monitor in $monitors){ $monitor.WmiSetBrightness(5, $brightness) } }; set-monitorBrightness '.($source->getValue() * 5).';" < NUL'));
+        $this->timers[$source->getID()]->destroy();
+      }, $this->window, 1000);
+
+      $timer->start();
+      $this->timers[$event->getSource()->getID()] = $timer;
+    }));
   }
 
   /**
