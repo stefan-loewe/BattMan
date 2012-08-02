@@ -37,12 +37,12 @@ class ControlView {
     
     $timerDisplayRequired = new Timer(function() {
       if($this->chkStayAwake->isChecked()) {
-        $libUser  = wb_load_library('Kernel32');
-        $function = wb_get_function_address('SetThreadExecutionState', $libUser);
+        $libKernel32  = wb_load_library('Kernel32');
+        $function     = wb_get_function_address('SetThreadExecutionState', $libKernel32);
         wb_call_function($function, array(//ES_DISPLAY_REQUIRED:=
           2)); 
       }
-    }, Application::getInstance()->getWindow(), 1000);
+    }, Application::getInstance()->getWindow(), 55555);
     $timerDisplayRequired->start();
     
     $this->chkDimDisplay->addActionListener(new \Woody\Event\ActionAdapter(function($event) {

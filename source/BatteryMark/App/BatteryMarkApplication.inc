@@ -106,7 +106,7 @@ class BatteryMarkApplication extends Application {
     $this->initControlView();
     $this->initGraphView();
 
-    $this->barPower = new ProgressBar(new Point(305, 605), new Dimension(700, 25));
+    $this->barPower = new ProgressBar(new Point(305, 615), new Dimension(700, 25));
     $this->window->getRootPane()->add($this->barPower);
     $this->barPower->setRange(0, 100);
 
