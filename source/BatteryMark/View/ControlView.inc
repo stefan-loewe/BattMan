@@ -21,7 +21,7 @@ class ControlView {
   public function __construct() {
     $this->frmDimension = new Dimension(300, 50);
 
-    $this->frame        = new Frame('', new Point(5, 96), $this->frmDimension);
+    $this->frame        = new Frame('', new Point(5, 110), $this->frmDimension);
   }
 
   public function initialize() {
