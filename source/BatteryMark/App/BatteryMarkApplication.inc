@@ -5,6 +5,7 @@ namespace BatteryMark\App;
 use \BatteryMark\Model\BatteryState;
 use \BatteryMark\View\TextView;
 use \BatteryMark\View\GraphView;
+use \BatteryMark\View\ControlView;
 use \Woody\App\Application;
 use \Woody\Components\Windows\ResizableWindow;
 use \Woody\Components\Controls\ProgressBar;
@@ -20,6 +21,7 @@ class BatteryMarkApplication extends Application {
 
   private $textView     = null;
   private $graphView    = null;
+  private $controlView  = null;
   private $barPower     = null;
   
   private $updateTimer  = null;
@@ -28,6 +30,8 @@ class BatteryMarkApplication extends Application {
    * This method acts as the constructor of the class.
    */
   public function __construct() {
+    parent::__construct();
+    
     $this->window = new ResizableWindow('BatteryMark', new Point(50, 50), new Dimension(1024, 700));
 
     $this->window->create(null);
@@ -90,8 +94,16 @@ class BatteryMarkApplication extends Application {
     $this->graphView->initialize();
   }
 
+  private function initControlView() {
+    $this->controlView = new ControlView();
+
+    $this->window->getRootPane()->add($this->controlView->getFrame());
+    $this->controlView->initialize();
+  }
+
   private function init() {
     $this->initTextView();
+    $this->initControlView();
     $this->initGraphView();
 
     $this->barPower = new ProgressBar(new Point(305, 605), new Dimension(700, 25));
@@ -107,43 +119,7 @@ class BatteryMarkApplication extends Application {
       $this->barPower->setProgress($this->status->getPercentRemaining());
     }, $this->window, 1000);
 
-    $this->updateTimer->start();
-    
-    
-    $slider1 = new \Woody\Components\Controls\Slider(new Point(10, 110), new Dimension(290, 25));
-    $this->window->getRootPane()->add($slider1);
-
-    $chkStayAwake = new \Woody\Components\Controls\Checkbox(0, new Point(10, 140), new Dimension(25, 25));
-    $this->window->getRootPane()->add($chkStayAwake);
-    
-    $timer = new Timer(function() use ($chkStayAwake) {
-      if($chkStayAwake->isChecked()) {
-        $libUser  = wb_load_library('Kernel32');
-        $function = wb_get_function_address('SetThreadExecutionState', $libUser);
-        wb_call_function($function, array(/*ES_DISPLAY_REQUIRED:=*/2));
-      }
-    }, $this->window, 55000);
-
-    $timer->start();
-
-    $this->timers = array();
-    $slider1->setRange(0, 20)->setValue(10)->addActionListener(new \Woody\Event\ActionAdapter(function($event) {
-
-      if(isset($this->timers[$event->getSource()->getID()]) && $this->timers[$event->getSource()->getID()]->isRunning()) {
-        var_dump("destroy");
-        $this->timers[$event->getSource()->getID()]->destroy();
-      }
-
-      $source = $event->getSource();
-      $timer = new Timer(function() use ($source) {
-        var_dump("exec");
-        exec(('powershell -executionPolicy Unrestricted -Command "function set-monitorBrightness {  [CmdletBinding()] param ( [ValidateRange(0,100)] [int]$brightness ) $monitors = Get-WmiObject -Namespace root\wmi -Class WmiMonitorBrightnessMethods; foreach ($monitor in $monitors){ $monitor.WmiSetBrightness(5, $brightness) } }; set-monitorBrightness '.($source->getValue() * 5).';" < NUL'));
-        $this->timers[$source->getID()]->destroy();
-      }, $this->window, 1000);
-
-      $timer->start();
-      $this->timers[$event->getSource()->getID()] = $timer;
-    }));
+    $this->updateTimer->start();    
   }
 
   /**
