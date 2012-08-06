@@ -18,8 +18,6 @@ class GraphView extends View  {
 
   private $states       = null;
 
-  private $bitmap = null;
-
   public function __construct(Point $topLeftCorner, Dimension $dimension) {
     parent::__construct($topLeftCorner, $dimension);
 
@@ -41,24 +39,29 @@ class GraphView extends View  {
   }
 
   private function initializeBitmap() {
-    $this->bitmap = ImageResource::create($this->frmDimension->resizeBy($this->imgInset));
-    $this->bitmap->drawRectangle(new Point(0, 0), $this->frmDimension->resizeBy($this->imgInset), 0xFFFFFF);
+    $bitmap = ImageResource::create($this->frmDimension->resizeBy($this->imgInset));
+    $bitmap->drawRectangle(new Point(0, 0), $this->frmDimension->resizeBy($this->imgInset), 0xFFFFFF);
 
     for($x = 0; $x < $this->frame->getDimension()->width; $x += 10) {
       $source = new Point($x, 0);
       $target = new Point($x, $this->frmDimension->height - $this->imgInset->height);
-      $this->bitmap->drawLine($source, $target, 0xFFC0A0);
+      $bitmap->drawLine($source, $target, 0xFFC0A0);
     }
 
-    return $this->bitmap;
+    return $bitmap;
   }
 
   public function update(Model $currentState) {
-    $this->bitmap         = $this->initializeBitmap();
+    $imageDimension = $this->frmDimension->resizeBy($this->imgInset);
+
+    if($imageDimension->width === 0 || $imageDimension->height === 0) {
+      return;
+    }
 
     $this->states[] = $currentState;
 
-    $imageDimension = $this->frmDimension->resizeBy($this->imgInset);
+    $bitmap         = $this->initializeBitmap();
+
     $stepWidth      = 1;//$imageDimension->width / (count($this->states) + 1);
     $stepHeight     = $imageDimension->height / 100;
     $increment      = ceil(count($this->states) / $imageDimension->width);
@@ -70,13 +73,13 @@ class GraphView extends View  {
       $source = new Point(($index - 1) * $stepWidth, $stepHeight * (100 - $sourceState->getPercentRemaining()));
       $target = new Point($index * $stepWidth, $stepHeight * (100 - $targetState->getPercentRemaining()));
 
-      $this->bitmap->drawLine($source, $target, 0x0000FF, 1);
+      $bitmap->drawLine($source, $target, 0x0000FF, 1);
       $index++;
     }
 
     // force repaint of frame, image
     $this->frame->remove($this->imgGraph);
-    $this->imgGraph = new Image($this->bitmap, new Point(5, 15), $imageDimension);
+    $this->imgGraph = new Image($bitmap, new Point(5, 15), $imageDimension);
     $this->frame->add($this->imgGraph);
   }
 
