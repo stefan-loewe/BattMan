@@ -60,5 +60,6 @@ class TextView {
   }
 
   public function resizeBy(Dimension $delta) {
+    return $this;
   }
 }

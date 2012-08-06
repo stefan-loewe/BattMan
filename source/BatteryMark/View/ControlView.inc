@@ -2,10 +2,13 @@
 
 namespace BatteryMark\View;
 
+use \BatteryMark\Model\BatteryState;
 use \Woody\App\Application;
-use \Woody\Components\Controls\Label;
+use \Woody\Components\Controls\Checkbox;
 use \Woody\Components\Controls\Frame;
+use \Woody\Components\Controls\Label;
 use \Woody\Components\Timer\Timer;
+use \Woody\Event\ActionAdapter;
 use \Woody\Layouts\GridLayout;
 use \Utils\Geom\Point;
 use \Utils\Geom\Dimension;
@@ -28,11 +31,11 @@ class ControlView {
     $this->frame->setLayout($layout = new GridLayout(2, 2, 0, 0));
 
     $this->frame->add(new Label('dim display:', new Point(5, 5), new Dimension(15, 15)));
-    $this->chkDimDisplay = new \Woody\Components\Controls\Checkbox(0, new Point(10, 110), new Dimension(25, 25));
+    $this->chkDimDisplay = new Checkbox(0, new Point(10, 110), new Dimension(25, 25));
     $this->frame->add($this->chkDimDisplay);
 
     $this->frame->add(new Label('stay awake:', new Point(5, 5), new Dimension(15, 15)));
-    $this->chkStayAwake = new \Woody\Components\Controls\Checkbox(0, new Point(10, 140), new Dimension(25, 25));
+    $this->chkStayAwake = new Checkbox(0, new Point(10, 140), new Dimension(25, 25));
     $this->frame->add($this->chkStayAwake);
     
     $timerDisplayRequired = new Timer(function() {
@@ -45,7 +48,7 @@ class ControlView {
     }, Application::getInstance()->getWindow(), 55555);
     $timerDisplayRequired->start();
     
-    $this->chkDimDisplay->addActionListener(new \Woody\Event\ActionAdapter(function($event) {
+    $this->chkDimDisplay->addActionListener(new ActionAdapter(function($event) {
       $value = $event->getSource()->isChecked() ? 0 : 100;
       exec('powershell -executionPolicy Unrestricted -Command "function set-monitorBrightness {  [CmdletBinding()] param ( [ValidateRange(0,100)] [int]$brightness ) $monitors = Get-WmiObject -Namespace root\wmi -Class WmiMonitorBrightnessMethods; foreach ($monitor in $monitors){ $monitor.WmiSetBrightness(5, $brightness) } }; set-monitorBrightness '.$value.';" < NUL');
     }));
@@ -53,7 +56,7 @@ class ControlView {
     $layout->layout($this->frame);
   }
 
-  public function update(\BatteryMark\Model\BatteryState $currentState) {
+  public function update(BatteryState $currentState) {
     $this->txtConnectedToAC->setValue($currentState->getPowerStatus());
     $this->txtIsCharging->setValue($currentState->getBatteryStatus());
     $this->txtPercentLeft->setValue($currentState->getPercentRemaining());
@@ -65,5 +68,6 @@ class ControlView {
   }
 
   public function resizeBy(Dimension $delta) {
+    return $this;
   }
 }

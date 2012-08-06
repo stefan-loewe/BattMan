@@ -6,6 +6,7 @@ use \BatteryMark\Model\BatteryState;
 use \BatteryMark\View\TextView;
 use \BatteryMark\View\GraphView;
 use \BatteryMark\View\ControlView;
+use \BatteryMark\View\LogView;
 use \Woody\App\Application;
 use \Woody\Components\Windows\ResizableWindow;
 use \Woody\Components\Controls\ProgressBar;
@@ -22,6 +23,7 @@ class BatteryMarkApplication extends Application {
   private $textView     = null;
   private $graphView    = null;
   private $controlView  = null;
+  private $logView      = null;
   private $barPower     = null;
   
   private $updateTimer  = null;
@@ -47,6 +49,7 @@ class BatteryMarkApplication extends Application {
 */
 
       $this->graphView->resizeBy(new Dimension($delta->width, $delta->height));
+      $this->logView->resizeBy(new Dimension($delta->width, $delta->height));
       $this->barPower->moveBy(new Dimension(0, $delta->height))->resizeBy(new Dimension($delta->width, 0));
     }));
 
@@ -101,10 +104,18 @@ class BatteryMarkApplication extends Application {
     $this->controlView->initialize();
   }
 
+  private function initLogView() {
+    $this->logView = new LogView();
+
+    $this->window->getRootPane()->add($this->logView->getFrame());
+    $this->logView->initialize();
+  }
+
   private function init() {
     $this->initTextView();
     $this->initControlView();
     $this->initGraphView();
+    $this->initLogView();
 
     $this->barPower = new ProgressBar(new Point(305, 615), new Dimension(700, 25));
     $this->window->getRootPane()->add($this->barPower);
@@ -115,6 +126,7 @@ class BatteryMarkApplication extends Application {
       
       $this->textView->update($this->status);
       $this->graphView->update($this->status);
+      $this->logView->update($this->status);
 
       $this->barPower->setProgress($this->status->getPercentRemaining());
     }, $this->window, 1000);
