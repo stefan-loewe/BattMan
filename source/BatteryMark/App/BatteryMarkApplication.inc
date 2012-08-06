@@ -25,7 +25,7 @@ class BatteryMarkApplication extends Application {
   private $controlView  = null;
   private $logView      = null;
   private $barPower     = null;
-  
+
   private $updateTimer  = null;
 
   /**
@@ -33,8 +33,8 @@ class BatteryMarkApplication extends Application {
    */
   public function __construct() {
     parent::__construct();
-    
-    $this->window = new ResizableWindow('BatteryMark', new Point(50, 50), new Dimension(1024, 700));
+
+    $this->window = new ResizableWindow('BatteryMark', new Point(50, 50), new Dimension(825, 525));
 
     $this->window->create(null);
 
@@ -84,28 +84,28 @@ class BatteryMarkApplication extends Application {
   }
 
   private function initTextView() {
-    $this->textView = new TextView();
+    $this->textView = new TextView(new Point(5, 5), new Dimension(300, 100));
 
     $this->window->getRootPane()->add($this->textView->getFrame());
     $this->textView->initialize();
   }
 
   private function initGraphView() {
-    $this->graphView = new GraphView();
+    $this->graphView = new GraphView(new Point(305, 5), new Dimension(500, 450));
 
     $this->window->getRootPane()->add($this->graphView->getFrame());
     $this->graphView->initialize();
   }
 
   private function initControlView() {
-    $this->controlView = new ControlView();
+    $this->controlView = new ControlView(new Point(5, 110), new Dimension(300, 50));
 
     $this->window->getRootPane()->add($this->controlView->getFrame());
     $this->controlView->initialize();
   }
 
   private function initLogView() {
-    $this->logView = new LogView();
+    $this->logView = new LogView(new Point(5, 165), new Dimension(300, 317));
 
     $this->window->getRootPane()->add($this->logView->getFrame());
     $this->logView->initialize();
@@ -117,21 +117,27 @@ class BatteryMarkApplication extends Application {
     $this->initGraphView();
     $this->initLogView();
 
-    $this->barPower = new ProgressBar(new Point(305, 615), new Dimension(700, 25));
+    $this->barPower = new ProgressBar(new Point(305, 465), new Dimension(500, 25));
     $this->window->getRootPane()->add($this->barPower);
     $this->barPower->setRange(0, 100);
 
-    $this->updateTimer = new Timer(function() {
-      $this->status = new BatteryState();
-      
-      $this->textView->update($this->status);
-      $this->graphView->update($this->status);
-      $this->logView->update($this->status);
+    $this->update();
 
-      $this->barPower->setProgress($this->status->getPercentRemaining());
+    $this->updateTimer = new Timer(function() {
+      $this->update();
     }, $this->window, 1000);
 
-    $this->updateTimer->start();    
+    $this->updateTimer->start();
+  }
+
+  private function update() {
+    $this->status = new BatteryState();
+
+    $this->textView->update($this->status);
+    $this->graphView->update($this->status);
+    $this->logView->update($this->status);
+
+    $this->barPower->setProgress($this->status->getPercentRemaining());
   }
 
   /**

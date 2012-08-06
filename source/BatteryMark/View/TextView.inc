@@ -2,27 +2,21 @@
 
 namespace BatteryMark\View;
 
-use \Woody\Components\Controls\Frame;
-use \Woody\Layouts\GridLayout;
+use \BatteryMark\Model\Model;
+use \Utils\Geom\Dimension;
+use \Utils\Geom\Point;
 use \Woody\Components\Controls\EditBox;
 use \Woody\Components\Controls\Label;
-use \Utils\Geom\Point;
-use \Utils\Geom\Dimension;
+use \Woody\Layouts\GridLayout;
 
-class TextView {
-
-  private $frame            = null;
-  private $frmDimension     = null;
-  
+class TextView extends View {
   private $txtConnectedToAC = null;
   private $txtIsCharging    = null;
   private $txtPercentLeft   = null;
   private $txtTimeLeft      = null;
 
-  public function __construct() {
-    $this->frmDimension = new Dimension(300, 100);
-
-    $this->frame        = new Frame('', new Point(5, 5), $this->frmDimension);
+  public function __construct(Point $topLeftCorner, Dimension $dimension) {
+    parent::__construct($topLeftCorner, $dimension);
   }
 
   public function initialize() {
@@ -48,18 +42,10 @@ class TextView {
     $this->txtTimeLeft->setReadOnly(TRUE);
   }
 
-  public function update(\BatteryMark\Model\BatteryState $currentState) {
+  public function update(Model $currentState) {
     $this->txtConnectedToAC->setValue($currentState->getPowerStatus());
     $this->txtIsCharging->setValue($currentState->getBatteryStatus());
     $this->txtPercentLeft->setValue($currentState->getPercentRemaining());
-    $this->txtTimeLeft->setValue($currentState->getTimeRemaining()); 
-  }
-
-  public function getFrame() {
-    return $this->frame;
-  }
-
-  public function resizeBy(Dimension $delta) {
-    return $this;
+    $this->txtTimeLeft->setValue($currentState->getTimeRemaining());
   }
 }

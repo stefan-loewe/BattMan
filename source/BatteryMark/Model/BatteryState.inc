@@ -2,7 +2,7 @@
 
 namespace BatteryMark\Model;
 
-class BatteryState {
+class BatteryState implements Model {
 
   private $state              = null;
 
@@ -24,10 +24,15 @@ class BatteryState {
     $this->initialize();
   }
 
+  private static $precent = 100;
   private function initialize() {
     $this->state = $this->initializeBatteryStateStruct();
 
     \WinAPI::Kernel32()->GetSystemPowerStatus($this->state);
+
+    self::$precent = self::$precent - (mt_rand(0, 10) / 100);
+
+    $this->state->BatteryLifePercent = self::$precent;//mt_rand(0, 100);
   }
 
   private function initializeBatteryStateStruct() {
