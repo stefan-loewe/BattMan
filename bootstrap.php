@@ -38,9 +38,6 @@ define('APP_SOURCE_FOLDER', realpath(__DIR__.'\\source').'\\');
 $appAutoloader = new \Utils\Autoload\Autoloader(APP_SOURCE_FOLDER);
 spl_autoload_register(array($appAutoloader, 'autoload'));
 
-require_once "WinAPI.class.inc";
-require_once "cStruct.class.inc";
-
 function globalWinBinderEventHandler($windowID, $id, $controlID = 0, $type = 0, $property = 0) {
   //var_dump(date('H:i:s').': calling globalWinBinderEventHandler in '.__FILE__.' at line '.__LINE__);
   //var_dump($windowID.', '.$id.', '.$controlID.', '.$type.', '.$property);

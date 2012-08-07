@@ -26,27 +26,13 @@ class BatteryState implements Model {
 
   private static $precent = 100;
   private function initialize() {
-    $this->state = $this->initializeBatteryStateStruct();
-
-    \WinAPI::Kernel32()->GetSystemPowerStatus($this->state);
+    $this->state  = new SystemPowerStatus();
+    
+    \Woody\Util\WinApi\WinApi::call('Kernel32::GetSystemPowerStatus', array($this->state));
 
     self::$precent = self::$precent - (mt_rand(0, 10) / 100);
 
     $this->state->BatteryLifePercent = self::$precent;//mt_rand(0, 100);
-  }
-
-  private function initializeBatteryStateStruct() {
-    if(!class_exists('SystemPowerStatus')) {
-      \cStruct\cStruct::define('SystemPowerStatus', "
-        BYTE  ACLineStatus;
-        BYTE  BatteryFlag;
-        BYTE  BatteryLifePercent;
-        BYTE  Reserved1;
-        DWORD BatteryLifeTime;
-        DWORD BatteryFullLifeTime;");
-    }
-
-    return new \SystemPowerStatus();
   }
 
   public function getPowerStatus() {

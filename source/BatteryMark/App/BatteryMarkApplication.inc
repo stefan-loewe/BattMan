@@ -41,13 +41,6 @@ class BatteryMarkApplication extends Application {
     $this->window->addWindowResizeListener(new WindowResizeAdapter(function(WindowResizeEvent $event) {
       $delta = $event->getDeltaDimension();
 
-      /*root pane as frame still not implemented correctly
-        -> consider to make dependency of Window to Frame (root-panle) explicit,
-        by pasing the frame to the constructor of the window -> NO !!!
-
-      --> add layout to frames aware, esp. on-resize!
-*/
-
       $this->graphView->resizeBy(new Dimension($delta->width, $delta->height));
       $this->logView->resizeBy(new Dimension($delta->width, $delta->height));
       $this->barPower->moveBy(new Dimension(0, $delta->height))->resizeBy(new Dimension($delta->width, 0));
