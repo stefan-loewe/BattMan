@@ -18,15 +18,16 @@ use \Utils\Geom\Dimension;
 
 class BatteryMarkApplication extends Application {
 
-  private $status       = null;
+  private $status               = null;
 
-  private $textView     = null;
-  private $graphView    = null;
-  private $controlView  = null;
-  private $logView      = null;
-  private $barPower     = null;
+  private $textView             = null;
+  private $graphView            = null;
+  private $controlView          = null;
+  private $logView              = null;
+  private $barPower             = null;
 
-  private $updateTimer  = null;
+  private $updateTimer          = null;
+  private $updateTimerInterval  = 10000;
 
   /**
    * This method acts as the constructor of the class.
@@ -77,7 +78,7 @@ class BatteryMarkApplication extends Application {
   }
 
   private function initTextView() {
-    $this->textView = new TextView(new Point(5, 5), new Dimension(300, 100));
+    $this->textView = new TextView(new Point(5, 5), new Dimension(300, 120));
 
     $this->window->getRootPane()->add($this->textView->getFrame());
     $this->textView->initialize();
@@ -91,14 +92,14 @@ class BatteryMarkApplication extends Application {
   }
 
   private function initControlView() {
-    $this->controlView = new ControlView(new Point(5, 110), new Dimension(300, 50));
+    $this->controlView = new ControlView(new Point(5, 130), new Dimension(300, 50));
 
     $this->window->getRootPane()->add($this->controlView->getFrame());
     $this->controlView->initialize();
   }
 
   private function initLogView() {
-    $this->logView = new LogView(new Point(5, 165), new Dimension(300, 317));
+    $this->logView = new LogView(new Point(5, 185), new Dimension(300, 297));
 
     $this->window->getRootPane()->add($this->logView->getFrame());
     $this->logView->initialize();
@@ -118,13 +119,13 @@ class BatteryMarkApplication extends Application {
 
     $this->updateTimer = new Timer(function() {
       $this->update();
-    }, $this->window, 1000);
+    }, $this->window, 10000);
 
     $this->updateTimer->start();
   }
 
   private function update() {
-    $this->status = new BatteryState();
+    $this->status = new BatteryState($this->status);
 
     $this->textView->update($this->status);
     $this->graphView->update($this->status);

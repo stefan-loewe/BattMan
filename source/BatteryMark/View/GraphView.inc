@@ -6,7 +6,7 @@ use \BatteryMark\Model\Model;
 use \Utils\Geom\Dimension;
 use \Utils\Geom\Point;
 use \Woody\Components\Controls\Image;
-use \Woody\Util\ImageResource;
+use \Woody\Util\Image\ImageResource;
 
 class GraphView extends View  {
 
@@ -39,16 +39,7 @@ class GraphView extends View  {
   }
 
   private function initializeBitmap() {
-    $bitmap = ImageResource::create($this->frmDimension->resizeBy($this->imgInset));
-    $bitmap->drawRectangle(new Point(0, 0), $this->frmDimension->resizeBy($this->imgInset), 0xFFFFFF);
-
-    for($x = 0; $x < $this->frame->getDimension()->width; $x += 10) {
-      $source = new Point($x, 0);
-      $target = new Point($x, $this->frmDimension->height - $this->imgInset->height);
-      $bitmap->drawLine($source, $target, 0xFFC0A0);
-    }
-
-    return $bitmap;
+    return ImageResource::create($this->frmDimension->resizeBy($this->imgInset));
   }
 
   public function update(Model $currentState) {
@@ -62,6 +53,30 @@ class GraphView extends View  {
 
     $bitmap         = $this->initializeBitmap();
 
+    $this->drawBackground($bitmap);
+    $this->drawGrid($bitmap);
+    $this->drawTimeLines($bitmap, $imageDimension);
+    $this->drawChart($bitmap, $imageDimension);
+
+    // force repaint of frame, image
+    $this->frame->remove($this->imgGraph);
+    $this->imgGraph = new Image($bitmap, new Point(5, 15), $imageDimension);
+    $this->frame->add($this->imgGraph);
+  }
+
+  private function drawBackground($bitmap) {
+    $bitmap->drawRectangle(new Point(0, 0), $this->frmDimension->resizeBy($this->imgInset), 0xFFFFFF);
+  }
+
+  private function drawGrid($bitmap) {
+    for($x = 0; $x < $this->frame->getDimension()->width; $x += 10) {
+      $source = new Point($x, 0);
+      $target = new Point($x, $this->frmDimension->height - $this->imgInset->height);
+      $bitmap->drawLine($source, $target, 0xFFC0A0);
+    }
+  }
+
+  private function drawChart($bitmap, $imageDimension) {
     $stepWidth      = 1;//$imageDimension->width / (count($this->states) + 1);
     $stepHeight     = $imageDimension->height / 100;
     $increment      = ceil(count($this->states) / $imageDimension->width);
@@ -76,11 +91,18 @@ class GraphView extends View  {
       $bitmap->drawLine($source, $target, 0x0000FF, 1);
       $index++;
     }
+  }
 
-    // force repaint of frame, image
-    $this->frame->remove($this->imgGraph);
-    $this->imgGraph = new Image($bitmap, new Point(5, 15), $imageDimension);
-    $this->frame->add($this->imgGraph);
+  private function drawTimeLines($bitmap, $imageDimension) {
+    $increment = (ceil(count($this->states) / $imageDimension->width));
+
+    for($i = 0; $i < 64; $i++) {
+      $xOffset = (90 * $i) / $increment;
+
+      $source = new Point($xOffset, 0);
+      $target = new Point($xOffset, $this->frmDimension->height - $this->imgInset->height);
+      $bitmap->drawLine($source, $target, 0xFFC0A0, 3);
+    }
   }
 
   public function resizeBy(Dimension $delta) {

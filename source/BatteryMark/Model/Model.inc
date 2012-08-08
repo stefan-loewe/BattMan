@@ -3,5 +3,4 @@
 namespace BatteryMark\Model;
 
 interface Model {
-
 }

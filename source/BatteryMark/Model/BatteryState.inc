@@ -2,9 +2,15 @@
 
 namespace BatteryMark\Model;
 
+use \Woody\Util\WinApi\WinApi;
+
 class BatteryState implements Model {
 
   private $state              = null;
+
+  private $creationTime       = 0;
+
+  private $timeOnBattery      = 0;
 
   const AC_OFFLINE            = 0;
 
@@ -20,15 +26,28 @@ class BatteryState implements Model {
 
   const TIME_UNKNOWN          = -1;
 
-  public function __construct() {
+  public function __construct(self $previousStatus = null) {
     $this->initialize();
+
+    $this->creationTime = time();
+
+    if($previousStatus === null) {
+      $this->timeOnBattery = 0;
+    }
+    else {
+      $this->timeOnBattery = $previousStatus->timeOnBattery;
+
+      if($this->state->ACLineStatus === self::AC_OFFLINE) {
+        $this->timeOnBattery += $this->creationTime - $previousStatus->creationTime;
+      }
+    }
   }
 
   private static $precent = 100;
   private function initialize() {
     $this->state  = new SystemPowerStatus();
-    
-    \Woody\Util\WinApi\WinApi::call('Kernel32::GetSystemPowerStatus', array($this->state));
+
+    WinApi::call('Kernel32::GetSystemPowerStatus', array($this->state));
 
     self::$precent = self::$precent - (mt_rand(0, 10) / 100);
 
@@ -37,11 +56,11 @@ class BatteryState implements Model {
 
   public function getPowerStatus() {
     if($this->state->ACLineStatus === self::AC_OFFLINE) {
-      return 'offline';
+      return 'yes';
     }
 
     else if($this->state->ACLineStatus === self::AC_ONLINE) {
-      return 'online';
+      return 'no';
     }
 
     return 'unknown';
@@ -57,10 +76,10 @@ class BatteryState implements Model {
     }
 
     else if(($this->state->BatteryFlag & self::BATTERY_CHARGING) === self::BATTERY_CHARGING) {
-      return 'charging';
+      return 'yes';
     }
 
-    return 'not charging';
+    return 'no';
   }
 
   public function getPercentRemaining() {
@@ -82,5 +101,9 @@ class BatteryState implements Model {
     $date->add(new \DateInterval('PT'.$this->state->BatteryLifeTime.'S'));
 
     return $date->diff(new \DateTime())->format('%H:%I:%S');
+  }
+
+  public function getTimeOnBattery() {
+    return $this->timeOnBattery;
   }
 }
