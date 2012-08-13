@@ -43,24 +43,19 @@ class BatteryState implements Model {
     }
   }
 
-  private static $precent = 100;
   private function initialize() {
     $this->state  = new SystemPowerStatus();
 
     WinApi::call('Kernel32::GetSystemPowerStatus', array($this->state));
-
-    self::$precent = self::$precent - (mt_rand(0, 10) / 100);
-
-    $this->state->BatteryLifePercent = self::$precent;//mt_rand(0, 100);
   }
 
   public function getPowerStatus() {
     if($this->state->ACLineStatus === self::AC_OFFLINE) {
-      return 'yes';
+      return 'no';
     }
 
     else if($this->state->ACLineStatus === self::AC_ONLINE) {
-      return 'no';
+      return 'yes';
     }
 
     return 'unknown';

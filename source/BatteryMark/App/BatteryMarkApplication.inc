@@ -119,7 +119,7 @@ class BatteryMarkApplication extends Application {
 
     $this->updateTimer = new Timer(function() {
       $this->update();
-    }, $this->window, 10000);
+    }, $this->window, $this->updateTimerInterval);
 
     $this->updateTimer->start();
   }
