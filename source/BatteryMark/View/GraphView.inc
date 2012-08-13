@@ -17,6 +17,8 @@ class GraphView extends View  {
   private $imgDimension = null;
 
   private $states       = null;
+  
+  private $repaintTimer = null;
 
   public function __construct(Point $topLeftCorner, Dimension $dimension) {
     parent::__construct($topLeftCorner, $dimension);
@@ -110,7 +112,13 @@ class GraphView extends View  {
     $this->frame->resizeBy(new Dimension($delta->width, $delta->height));
 
     $this->frmDimension = $this->frmDimension->resizeBy(new Dimension($delta->width, $delta->height));
-
+    
+    if($this->repaintTimer !== null && $this->repaintTimer->isRunning()) {
+      $this->repaintTimer->destroy();
+    }
+    $this->repaintTimer = new \BatteryMark\Components\Timer\RunOnceTimer(function() {$this->update($this->states[$this->states->count() - 1]);}, \BatteryMark\App\BatteryMarkApplication::getInstance()->getWindow(), 500);
+    $this->repaintTimer->start();
+    
     return $this;
   }
 }
