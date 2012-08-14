@@ -27,7 +27,7 @@ class BatteryMarkApplication extends Application {
   private $barPower             = null;
 
   private $updateTimer          = null;
-  private $updateTimerInterval  = 10000;
+  private $updateTimerInterval  = 1000;
 
   /**
    * This method acts as the constructor of the class.
@@ -115,23 +115,27 @@ class BatteryMarkApplication extends Application {
     $this->window->getRootPane()->add($this->barPower);
     $this->barPower->setRange(0, 100);
 
-    $this->update();
-
-    $this->updateTimer = new Timer(function() {
-      $this->update();
-    }, $this->window, $this->updateTimerInterval);
-
+    // make view updates  periodically
+    $updateCallback = function() {
+      $this->updateViews();
+    };
+    $this->updateTimer = new Timer($updateCallback, $this->window, $this->updateTimerInterval);
     $this->updateTimer->start();
+
+    $this->updateViews();
   }
 
-  private function update() {
+  private function updateViews() {
     $this->status = new BatteryState($this->status);
 
     $this->textView->update($this->status);
-    $this->graphView->update($this->status);
-    $this->logView->update($this->status);
-
     $this->barPower->setProgress($this->status->getPercentRemaining());
+
+    // update log and graph only every 10th time
+    if($this->updateTimer->getExecutionCount() % 10 === 0) {
+      $this->graphView->update($this->status);
+      $this->logView->update($this->status);
+    }
   }
 
   /**

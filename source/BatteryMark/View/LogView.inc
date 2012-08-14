@@ -33,6 +33,7 @@ class LogView extends View  {
     $entry .= ', '.$currentState->getBatteryStatus();
     $entry .= ', '.$currentState->getPercentRemaining().'%';
     $entry .= ', '.$currentState->getTimeRemaining();
+    $entry .= ', '.$currentState->getTimeOnBattery();
 
     $this->txtLog->setValue(null);
     $this->txtLog->setValue($currentLog.$entry);

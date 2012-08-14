@@ -101,4 +101,8 @@ class BatteryState implements Model {
   public function getTimeOnBattery() {
     return $this->timeOnBattery;
   }
+
+  public function getCreationTime() {
+    return $this->creationTime;
+  }
 }
