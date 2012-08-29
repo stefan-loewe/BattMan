@@ -35,8 +35,8 @@ class ControlView extends View  {
       if($this->chkStayAwake->isChecked()) {
         $libKernel32  = wb_load_library('Kernel32');
         $function     = wb_get_function_address('SetThreadExecutionState', $libKernel32);
-        wb_call_function($function, array(//ES_DISPLAY_REQUIRED:=
-          2));
+        wb_call_function($function, array(//ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED:=
+          0x00000001 | 0x00000002));
       }
     }, Application::getInstance()->getWindow(), 55555);
     $timerDisplayRequired->start();
