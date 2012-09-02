@@ -1,5 +1,8 @@
 <?php
 
+use \Woody\Event\EventFactory;
+use \Woody\Event\EventInfo;
+
 error_reporting(E_ALL | E_STRICT);
 
 define('APP_ROOT_FOLDER', realpath(__DIR__).'\\');
@@ -20,7 +23,7 @@ $appAutoloader = new \Utils\Autoload\Autoloader(APP_SOURCE_FOLDER);
 spl_autoload_register(array($appAutoloader, 'autoload'));
 
 function globalWinBinderEventHandler($windowID, $id, $controlID = 0, $type = 0, $property = 0) {
-  \Woody\Event\EventFactory::createEvent($windowID, $id, $controlID, $type, $property);
+  EventFactory::createEvent(new EventInfo($windowID, $id, $controlID, $type, $property));
 }
 
 $app = new \BatteryMark\App\BatteryMarkApplication();
