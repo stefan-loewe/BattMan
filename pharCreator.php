@@ -32,7 +32,7 @@ try {
 
   // collect the files from the woody and BatteryMark directory, and put them in Woody adnd BatteryMark directory
   // in the phar archive
-  if(TRUE) {
+  if(false) {
     $files = array();
     $files = collectFiles('D:\\workspace\\programming\\PHP\\woody', 'Woody', $files);
     $files = collectFiles('D:\\workspace\\programming\\PHP\\BatteryMark', 'BatteryMark', $files);
@@ -42,11 +42,100 @@ try {
   }
 
   // collect all the files from one directory (needs manual svn export before)
-  else {
+  else if(false) {
     $baseDir  = 'D:\\workspace\\programming\\PHP\\BM';
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($baseDir));
   }
+  
+  else {
+    
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\EventFactory.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Utils\DataStructures\RingBuffer.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Utils\Geom\Dimension.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Utils\HTTP\HttpGetRequest.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Utils\HTTP\HttpRequest.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Component.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Windows\AbstractWindow.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\System\WindowConstraints.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\WindowResizeListener.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\Frame.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Container.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Layouts\GridLayout.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Layouts\Layout.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\WindowCloseAdapter.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\WindowCloseListener.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\ActionListener.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\FocusListener.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\KeyListener.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\MouseListener.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Utils\Geom\Point.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\IComponent.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\Actionable.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\Control.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\Tab.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Timer\Timer.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\WinBinderException.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Timer\TimerAlreadyRunningException.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Timer\TimerNotRunningException.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\MouseEvent.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\Event.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Utils\Common\ValueObject.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\FocusEvent.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\KeyEvent.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\ActionEvent.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\WindowResizeEvent.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\WindowCloseEvent.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\EventInfo.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Utils\Autoload\Autoloader.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Utils\Autoload\SourceFileNotFoundException.inc';
+$files[] = 'C:\workspace\programming\PHP\BatteryMark\source\BatteryMark\App\BatteryMarkApplication.inc';
+$files[] = 'C:\workspace\programming\PHP\BatteryMark\source\BatteryMark\Model\BatteryState.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Util\WinApi\WinApi.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Util\WinApi\Structure.inc';
+$files[] = 'C:\workspace\programming\PHP\BatteryMark\source\BatteryMark\Model\Model.inc';
+$files[] = 'C:\workspace\programming\PHP\BatteryMark\source\BatteryMark\Model\SystemPowerStatus.inc';
+$files[] = 'C:\workspace\programming\PHP\BatteryMark\source\BatteryMark\View\TextView.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\EditBox.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\EditField.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\Label.inc';
+$files[] = 'C:\workspace\programming\PHP\BatteryMark\source\BatteryMark\View\View.inc';
+$files[] = 'C:\workspace\programming\PHP\BatteryMark\source\BatteryMark\View\GraphView.inc';
+$files[] = 'C:\workspace\programming\PHP\BatteryMark\source\BatteryMark\Components\Timer\RunOnceTimer.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\Image.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Util\Image\ImageResource.inc';
+$files[] = 'C:\workspace\programming\PHP\BatteryMark\source\BatteryMark\View\ControlView.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\Checkbox.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\ActionAdapter.inc';
+$files[] = 'C:\workspace\programming\PHP\BatteryMark\source\BatteryMark\View\LogView.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\EditArea.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\App\Application.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Windows\ResizableWindow.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Components\Controls\ProgressBar.inc';
+$files[] = 'C:\workspace\programming\PHP\woody\source\Woody\Event\WindowResizeAdapter.inc';
 
+$sourceFiles = array();
+    foreach($files as $file) {
+      $path = str_replace('C:\workspace\programming\PHP\woody', 'Woody', $file);
+      $path = str_replace('C:\workspace\programming\PHP\BatteryMark', 'BatteryMark', $path);
+      echo "\n".$path;
+      $sourceFiles[$path] = $file;
+    }
+    
+    $sourceFiles['Woody\lib\winbinder.php'] = 'C:\workspace\programming\PHP\woody\lib\winbinder.php';
+    $sourceFiles['Woody\lib\wb_windows.inc.php'] = 'C:\workspace\programming\PHP\woody\lib\wb_windows.inc.php';
+    $sourceFiles['Woody\lib\wb_resources.inc.php'] = 'C:\workspace\programming\PHP\woody\lib\wb_resources.inc.php';
+    $sourceFiles['Woody\lib\wb_generic.inc.php'] = 'C:\workspace\programming\PHP\woody\lib\wb_generic.inc.php';
+    $sourceFiles['Woody\lib\fi\freeimage.inc.php'] = 'C:\workspace\programming\PHP\woody\lib\fi\freeimage.inc.php';
+    
+    $sourceFiles['Woody\source\Woody\Util\WinApi\Types\Byte.inc'] = 'C:\workspace\programming\PHP\woody\source\Woody\Util\WinApi\Types\Byte.inc';
+    $sourceFiles['Woody\source\Woody\Util\WinApi\Types\Dword.inc'] = 'C:\workspace\programming\PHP\woody\source\Woody\Util\WinApi\Types\Dword.inc';
+    var_dump($sourceFiles);
+    
+    
+    $iterator = new ArrayIterator($sourceFiles);
+    $baseDir  = null;
+  }
+  
   $phar = new Phar('BattMan.phar', 0, 'BattMan.phar');
   $phar->buildFromIterator($iterator, $baseDir);
 
@@ -66,7 +155,7 @@ try {
   spl_autoload_register(array($appAutoloader, \'autoload\'));
 
   function globalWinBinderEventHandler($windowID, $id, $controlID = 0, $type = 0, $property = 0) {
-    \Woody\Event\EventFactory::createEvent($windowID, $id, $controlID, $type, $property);
+    \Woody\Event\EventFactory::createEvent(new \Woody\Event\EventInfo($windowID, $id, $controlID, $type, $property));
   }
 
   $app = new \BatteryMark\App\BatteryMarkApplication();
