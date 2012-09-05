@@ -26,7 +26,8 @@ spl_autoload_register(array($appAutoloader, 'autoload'));
 function globalWinBinderEventHandler($windowID, $id, $controlID = 0, $type = 0, $property = 0) {
   $event = EventFactory::createEvent($eventInfo = new EventInfo($windowID, $id, $controlID, $type, $property));
   if($event != null) {
-    EventDispatcher::dispatchEvent($eventInfo, $event);
+    //EventDispatcher::dispatchEvent($eventInfo, $event);
+    $event->dispatch();
   }
 }
 

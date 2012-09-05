@@ -46,6 +46,13 @@ class BatteryMarkApplication extends Application {
       $this->logView->resizeBy(new Dimension($delta->width, $delta->height));
       $this->barPower->moveBy(new Dimension(0, $delta->height))->resizeBy(new Dimension($delta->width, 0));
     }));
+    
+    $this->window->setWindowCloseListener(
+            new \Woody\Event\WindowCloseAdapter(
+                    function($event) {
+              $event->getSource()->close();
+              echo "\nGoodbye";}
+                    ));
 
     $this->shutdownTimer = new Timer($this->getShutdownCallback(), $this->window, 1000);
 
