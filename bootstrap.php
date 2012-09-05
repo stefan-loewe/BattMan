@@ -2,7 +2,6 @@
 
 use \Woody\Event\EventInfo;
 use \Woody\Event\EventFactory;
-use \Woody\Event\EventDispatcher;
 
 error_reporting(E_ALL | E_STRICT);
 
@@ -27,7 +26,6 @@ function globalWinBinderEventHandler($windowID, $id, $controlID = 0, $type = 0, 
   $events = EventFactory::createEvent($eventInfo = new EventInfo($windowID, $id, $controlID, $type, $property));
   foreach($events as $event) {
     if($event != null) {
-      //EventDispatcher::dispatchEvent($eventInfo, $event);
       $event->dispatch();
     }
   }
