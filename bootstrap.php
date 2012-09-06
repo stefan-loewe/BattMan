@@ -2,6 +2,7 @@
 
 use \Woody\Event\EventInfo;
 use \Woody\Event\EventFactory;
+use \Woody\Components\Component;
 
 error_reporting(E_ALL | E_STRICT);
 
@@ -23,8 +24,9 @@ $appAutoloader = new \Utils\Autoload\Autoloader(APP_SOURCE_FOLDER);
 spl_autoload_register(array($appAutoloader, 'autoload'));
 
 function globalWinBinderEventHandler($windowID, $id, $controlID = 0, $type = 0, $property = 0) {
-  $events = EventFactory::createEvent($eventInfo = new EventInfo($windowID, $id, $controlID, $type, $property));
-  foreach($events as $event) {
+  $eventInfo = new EventInfo($windowID, $id, Component::getComponentByID($controlID), $type, $property);
+  
+  foreach(EventFactory::createEvent($eventInfo) as $event) {
     if($event != null) {
       $event->dispatch();
     }
