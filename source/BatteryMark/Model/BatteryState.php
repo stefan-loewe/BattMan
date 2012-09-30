@@ -1,8 +1,8 @@
 <?php
 
-namespace BatteryMark\Model;
+namespace ws\loewe\BattMan\Model;
 
-use \Woody\Util\WinApi\WinApi;
+use \ws\loewe\Woody\Util\WinApi\WinApi;
 
 class BatteryState implements Model {
 

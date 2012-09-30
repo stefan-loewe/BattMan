@@ -1,12 +1,12 @@
 <?php
 
-namespace BatteryMark\View;
+namespace ws\loewe\BattMan\View;
 
-use \BatteryMark\Model\Model;
-use \Woody\Components\Controls\EditArea;
-use \Woody\Layouts\GridLayout;
-use \Utils\Geom\Dimension;
-use \Utils\Geom\Point;
+use \ws\loewe\BattMan\Model\Model;
+use \ws\loewe\Woody\Components\Controls\EditArea;
+use \ws\loewe\Woody\Layouts\GridLayout;
+use \ws\loewe\Utils\Geom\Dimension;
+use \ws\loewe\Utils\Geom\Point;
 
 class LogView extends View  {
   private $txtLog = null;

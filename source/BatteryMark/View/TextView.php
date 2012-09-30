@@ -1,13 +1,13 @@
 <?php
 
-namespace BatteryMark\View;
+namespace ws\loewe\BattMan\View;
 
-use \BatteryMark\Model\Model;
-use \Utils\Geom\Dimension;
-use \Utils\Geom\Point;
-use \Woody\Components\Controls\EditBox;
-use \Woody\Components\Controls\Label;
-use \Woody\Layouts\GridLayout;
+use \ws\loewe\BattMan\Model\Model;
+use \ws\loewe\Utils\Geom\Dimension;
+use \ws\loewe\Utils\Geom\Point;
+use \ws\loewe\Woody\Components\Controls\EditBox;
+use \ws\loewe\Woody\Components\Controls\Label;
+use \ws\loewe\Woody\Layouts\GridLayout;
 
 class TextView extends View {
   private $txtConnectedToAC = null;

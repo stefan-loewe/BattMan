@@ -1,22 +1,22 @@
 <?php
 
-namespace BatteryMark\App;
+namespace ws\loewe\BattMan\App;
 
-use \BatteryMark\Model\BatteryState;
-use \BatteryMark\View\TextView;
-use \BatteryMark\View\GraphView;
-use \BatteryMark\View\ControlView;
-use \BatteryMark\View\LogView;
-use \Woody\App\Application;
-use \Woody\Components\Windows\ResizableWindow;
-use \Woody\Components\Controls\ProgressBar;
-use \Woody\Components\Timer\Timer;
-use \Woody\Event\WindowResizeAdapter;
-use \Woody\Event\WindowResizeEvent;
-use \Utils\Geom\Point;
-use \Utils\Geom\Dimension;
+use \ws\loewe\BattMan\Model\BatteryState;
+use \ws\loewe\BattMan\View\TextView;
+use \ws\loewe\BattMan\View\GraphView;
+use \ws\loewe\BattMan\View\ControlView;
+use \ws\loewe\BattMan\View\LogView;
+use \ws\loewe\Woody\App\Application;
+use \ws\loewe\Woody\Components\Windows\ResizableWindow;
+use \ws\loewe\Woody\Components\Controls\ProgressBar;
+use \ws\loewe\Woody\Components\Timer\Timer;
+use \ws\loewe\Woody\Event\WindowResizeAdapter;
+use \ws\loewe\Woody\Event\WindowResizeEvent;
+use \ws\loewe\Utils\Geom\Point;
+use \ws\loewe\Utils\Geom\Dimension;
 
-class BatteryMarkApplication extends Application {
+class ws\loewe\BattManApplication extends Application {
 
   private $status               = null;
 
@@ -35,7 +35,7 @@ class BatteryMarkApplication extends Application {
   public function __construct() {
     parent::__construct();
 
-    $this->window = new ResizableWindow('BatteryMark', new Point(50, 50), new Dimension(825, 525));
+    $this->window = new ResizableWindow('ws\loewe\BattMan', new Point(50, 50), new Dimension(825, 525));
 
     $this->window->create(null);
 
@@ -48,7 +48,7 @@ class BatteryMarkApplication extends Application {
     }));
     
     $this->window->setWindowCloseListener(
-            new \Woody\Event\WindowCloseAdapter(
+            new \ws\loewe\Woody\Event\WindowCloseAdapter(
                     function($event) {
               $event->getSource()->close();
               echo "\nGoodbye";}
@@ -72,7 +72,7 @@ class BatteryMarkApplication extends Application {
   /**
    * This method starts the application.
    *
-   * @return \BatteryMark\App\BatteryMarkApplication $this
+   * @return \ws\loewe\BattMan\App\ws\loewe\BattManApplication $this
    */
   public function start() {
     $this->isRunning = TRUE;
@@ -148,7 +148,7 @@ class BatteryMarkApplication extends Application {
   /**
    * This method stops the application.
    *
-   * @return \BatteryMark\App\BatteryMarkApplication $this
+   * @return \ws\loewe\BattMan\App\ws\loewe\BattManApplication $this
    */
   public function stop() {
     $this->isRunning = FALSE;

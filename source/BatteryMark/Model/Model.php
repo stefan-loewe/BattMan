@@ -1,6 +1,6 @@
 <?php
 
-namespace BatteryMark\Model;
+namespace ws\loewe\BattMan\Model;
 
 interface Model {
 }

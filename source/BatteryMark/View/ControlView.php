@@ -1,16 +1,16 @@
 <?php
 
-namespace BatteryMark\View;
+namespace ws\loewe\BattMan\View;
 
-use \BatteryMark\Model\Model;
-use \Woody\App\Application;
-use \Woody\Components\Controls\Checkbox;
-use \Woody\Components\Controls\Label;
-use \Woody\Components\Timer\Timer;
-use \Woody\Event\ActionAdapter;
-use \Woody\Layouts\GridLayout;
-use \Utils\Geom\Point;
-use \Utils\Geom\Dimension;
+use \ws\loewe\BattMan\Model\Model;
+use \ws\loewe\Woody\App\Application;
+use \ws\loewe\Woody\Components\Controls\Checkbox;
+use \ws\loewe\Woody\Components\Controls\Label;
+use \ws\loewe\Woody\Components\Timer\Timer;
+use \ws\loewe\Woody\Event\ActionAdapter;
+use \ws\loewe\Woody\Layouts\GridLayout;
+use \ws\loewe\Utils\Geom\Point;
+use \ws\loewe\Utils\Geom\Dimension;
 
 class ControlView extends View  {
   private $chkDimDisplay  = null;

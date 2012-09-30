@@ -1,8 +1,8 @@
 <?php
 
-namespace BatteryMark\Model;
+namespace ws\loewe\BattMan\Model;
 
-use Woody\Util\WinApi\Structure;
+use \ws\loewe\Woody\Util\WinApi\Structure;
 
 class SystemPowerStatus extends Structure {
   /**

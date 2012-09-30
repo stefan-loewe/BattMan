@@ -1,9 +1,9 @@
 <?php
 
-namespace BatteryMark\Components\Timer;
+namespace ws\loewe\BattMan\Components\Timer;
 
-use \Woody\Components\Windows\AbstractWindow;
-use \Woody\Components\Timer\Timer;
+use \ws\loewe\Woody\Components\Windows\AbstractWindow;
+use \ws\loewe\Woody\Components\Timer\Timer;
 
 class RunOnceTimer extends Timer {
   

@@ -1,14 +1,14 @@
 <?php
 
-namespace BatteryMark\View;
+namespace ws\loewe\BattMan\View;
 
-use \BatteryMark\App\BatteryMarkApplication;
-use \BatteryMark\Components\Timer\RunOnceTimer;
-use \BatteryMark\Model\Model;
-use \Utils\Geom\Dimension;
-use \Utils\Geom\Point;
-use \Woody\Components\Controls\Image;
-use \Woody\Util\Image\ImageResource;
+use \ws\loewe\BattMan\App\ws\loewe\BattManApplication;
+use \ws\loewe\BattMan\Components\Timer\RunOnceTimer;
+use \ws\loewe\BattMan\Model\Model;
+use \ws\loewe\Utils\Geom\Dimension;
+use \ws\loewe\Utils\Geom\Point;
+use \ws\loewe\Woody\Components\Controls\Image;
+use \ws\loewe\Woody\Util\Image\ImageResource;
 
 class GraphView extends View  {
 
@@ -123,7 +123,7 @@ class GraphView extends View  {
       function() {
         $this->update($this->states[$this->states->count() - 1]);
       },
-      BatteryMarkApplication::getInstance()->getWindow(),
+      ws\loewe\BattManApplication::getInstance()->getWindow(),
       500);
     $this->repaintTimer->start();
 
