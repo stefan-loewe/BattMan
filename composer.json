@@ -1,0 +1,12 @@
+{
+    "name": "ws/loewe/BattMan",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/stefan-loewe/Woody"
+        }
+    ],
+    "require": {
+        "ws/loewe/Woody": "dev-master"
+    }
+}
