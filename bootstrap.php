@@ -12,7 +12,7 @@ use \ws\loewe\Woody\Components\Component;
 error_reporting(E_ALL | E_STRICT);
 
 
-$autoloader = new Autoloader(SOURCE_FOLDER.'/');
+$autoloader = new Autoloader('./source/', 'php');
 
 spl_autoload_register(array($autoloader, 'autoload'));
 
@@ -26,5 +26,5 @@ function globalWinBinderEventHandler($windowID, $id, $controlID = 0, $type = 0, 
   }
 }
 
-$app = new \BattMan\App\BattManApplication();
+$app = new ws\loewe\BattMan\App\BattManApplication();
 $app->start();
