@@ -16,7 +16,7 @@ use \ws\loewe\Woody\Event\WindowResizeEvent;
 use \ws\loewe\Utils\Geom\Point;
 use \ws\loewe\Utils\Geom\Dimension;
 
-class ws\loewe\BattManApplication extends Application {
+class BattManApplication extends Application {
 
   private $status               = null;
 
