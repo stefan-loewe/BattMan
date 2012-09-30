@@ -4,9 +4,14 @@
         {
             "type": "vcs",
             "url": "https://github.com/stefan-loewe/Woody"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/stefan-loewe/Utils"
         }
     ],
     "require": {
-        "ws/loewe/Woody": "dev-master"
+        "ws/loewe/Woody": "dev-master",
+        "ws/loewe/Utils": "dev-master"
     }
 }
