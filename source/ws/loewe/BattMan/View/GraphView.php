@@ -2,7 +2,7 @@
 
 namespace ws\loewe\BattMan\View;
 
-use \ws\loewe\BattMan\App\ws\loewe\BattManApplication;
+use \ws\loewe\BattMan\App\BattManApplication;
 use \ws\loewe\BattMan\Components\Timer\RunOnceTimer;
 use \ws\loewe\BattMan\Model\Model;
 use \ws\loewe\Utils\Geom\Dimension;
@@ -123,7 +123,7 @@ class GraphView extends View  {
       function() {
         $this->update($this->states[$this->states->count() - 1]);
       },
-      ws\loewe\BattManApplication::getInstance()->getWindow(),
+      BattManApplication::getInstance()->getWindow(),
       500);
     $this->repaintTimer->start();
 
