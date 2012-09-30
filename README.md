@@ -26,4 +26,4 @@ BattMan is only tested on Microsoft Windows 7, it may run on older versions, too
 
 Why does BattMan exist?
 -----------------------
-This is nothing more than an effort for show-casing Woody and the WinBinder extension in some non-trivial application.
+This is nothing more than an effort for show-casing [Woody](https://github.com/stefan-loewe/Woody/ "Woody") and the [WinBinder](https://github.com/stefan-loewe/WinBinder/ "WinBinder") extension in some non-trivial application.
