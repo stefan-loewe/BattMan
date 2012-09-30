@@ -1,27 +1,20 @@
 <?php
 
-use \Woody\Event\EventInfo;
-use \Woody\Event\EventFactory;
-use \Woody\Components\Component;
+require_once './vendor/autoload.php';
+require_once './vendor/ws/loewe/Woody/lib/winbinder.php';
+require_once './vendor/ws/loewe/Woody/lib/fi/freeimage.inc.php';
+
+use \ws\loewe\Utils\Autoload\Autoloader;
+use \ws\loewe\Woody\Event\EventInfo;
+use \ws\loewe\Woody\Event\EventFactory;
+use \ws\loewe\Woody\Components\Component;
 
 error_reporting(E_ALL | E_STRICT);
 
-define('APP_ROOT_FOLDER', realpath(__DIR__).'\\');
-define('APP_SOURCE_FOLDER', realpath(__DIR__.'\\source').'\\');
 
-define('WOODY_INSTALLATION_FOLDER', str_replace('\\', '/', realpath(__DIR__.'\..\\woody')));
-define('WOODY_SOURCE_FOLDER', WOODY_INSTALLATION_FOLDER.'/source');
+$autoloader = new Autoloader(SOURCE_FOLDER.'/');
 
-
-require_once WOODY_INSTALLATION_FOLDER.'/lib/winbinder.php';
-require_once WOODY_INSTALLATION_FOLDER.'/lib/fi/freeimage.inc.php';
-require_once WOODY_SOURCE_FOLDER.'/Utils/Autoload/Autoloader.inc';
-
-$woodyAutoloader = new \Utils\Autoload\Autoloader(WOODY_SOURCE_FOLDER.'/');
-spl_autoload_register(array($woodyAutoloader, 'autoload'));
-
-$appAutoloader = new \Utils\Autoload\Autoloader(APP_SOURCE_FOLDER);
-spl_autoload_register(array($appAutoloader, 'autoload'));
+spl_autoload_register(array($autoloader, 'autoload'));
 
 function globalWinBinderEventHandler($windowID, $id, $controlID = 0, $type = 0, $property = 0) {
   $eventInfo = new EventInfo($windowID, $id, Component::getComponentByID($controlID), $type, $property);
@@ -33,5 +26,5 @@ function globalWinBinderEventHandler($windowID, $id, $controlID = 0, $type = 0, 
   }
 }
 
-$app = new \BatteryMark\App\BatteryMarkApplication();
+$app = new \BattMan\App\BattManApplication();
 $app->start();
