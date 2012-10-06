@@ -13,11 +13,16 @@ to your php.ini
 
 How to install BattMan?
 -----------------------
-For installing BattMan, just clone this repository and use composer to resolve the dependecies (namely ws/loewe/Woody and /ws/loewe/Utils).
 
-- `git clone https://github.com/stefan-loewe/BattMan.git`
-- `cd BattMan`
-- `php composer.phar install`
+- easy-peasy binary distribution
+  - download the binary distribution file [BattMan.zip](from https://github.com/stefan-loewe/BattMan/blob/master/dist/BattMan.zip "BattMan.zip")
+  - extract to folder of your choice and change into BattMan directory
+  - run `php BattMan.phar`
+- installation via git repository
+  - `git clone https://github.com/stefan-loewe/BattMan.git`
+  - `cd BattMan`
+  - `php composer.phar install`
+  - run `php bootstrap.php` from the main folder
 
 How to run BattMan?
 -------------------
