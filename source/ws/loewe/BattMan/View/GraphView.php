@@ -53,14 +53,18 @@ class GraphView extends View  {
       return;
     }
 
-    $this->states[] = $currentState;
+    // only add the current state if collection is empty or last element is not same as current state
+    // the latter might happen when adding it repeatedly during resizing
+    if($this->states->count() == 0 || $this->states[$this->states->count() - 1] != $currentState) {
+      $this->states[] = $currentState;
+    }
 
-    $bitmap         = $this->initializeBitmap();
+    $bitmap = $this->initializeBitmap();
 
-    $this->drawBackground($bitmap);
-    $this->drawGrid($bitmap);
-    $this->drawTimeLines($bitmap, $imageDimension);
-    $this->drawChart($bitmap, $imageDimension);
+    $this->drawBackground($bitmap)
+      ->drawGrid($bitmap)
+      ->drawTimeLines($bitmap, $imageDimension)
+      ->drawChart($bitmap, $imageDimension);
 
     // force repaint of frame, image
     $this->frame->remove($this->imgGraph);
@@ -70,6 +74,8 @@ class GraphView extends View  {
 
   private function drawBackground($bitmap) {
     $bitmap->drawRectangle(new Point(0, 0), $this->frmDimension->resizeBy($this->imgInset), 0xFFFFFF);
+
+    return $this;
   }
 
   private function drawGrid($bitmap) {
@@ -78,6 +84,8 @@ class GraphView extends View  {
       $target = new Point($x, $this->frmDimension->height - $this->imgInset->height);
       $bitmap->drawLine($source, $target, 0xFFC0A0);
     }
+
+    return $this;
   }
 
   private function drawChart($bitmap, $imageDimension) {
@@ -95,6 +103,8 @@ class GraphView extends View  {
       $bitmap->drawLine($source, $target, 0x0000FF, 1);
       $index++;
     }
+
+    return $this;
   }
 
   private function drawTimeLines($bitmap, $imageDimension) {
@@ -107,6 +117,8 @@ class GraphView extends View  {
       $target = new Point($xOffset, $this->frmDimension->height - $this->imgInset->height);
       $bitmap->drawLine($source, $target, 0xFFC0A0, 3);
     }
+
+    return $this;
   }
 
   public function resizeBy(Dimension $delta) {
