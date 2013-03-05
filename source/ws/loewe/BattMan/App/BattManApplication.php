@@ -46,7 +46,7 @@ class BattManApplication extends Application {
       $this->logView->resizeBy(new Dimension($delta->width, $delta->height));
       $this->barPower->moveBy(new Dimension(0, $delta->height))->resizeBy(new Dimension($delta->width, 0));
     }));
-    
+
     $this->window->setWindowCloseListener(
             new \ws\loewe\Woody\Event\WindowCloseAdapter(
                     function($event) {
