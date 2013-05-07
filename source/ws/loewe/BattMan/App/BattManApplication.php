@@ -28,6 +28,9 @@ class BattManApplication extends Application {
 
   private $updateTimer          = null;
   private $updateTimerInterval  = 1000;
+  
+  private $isRunning            = FALSE;
+  private $shutdownTimer        = null;
 
   /**
    * This method acts as the constructor of the class.

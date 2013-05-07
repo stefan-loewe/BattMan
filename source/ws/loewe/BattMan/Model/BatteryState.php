@@ -86,8 +86,6 @@ class BatteryState implements Model {
   }
 
   public function getTimeRemaining() {
-    $this->powerStatus = 'unknown';
-
     if($this->state->BatteryLifeTime === self::TIME_UNKNOWN) {
       return 'unknown';
     }
