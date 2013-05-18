@@ -12,14 +12,39 @@ use \ws\loewe\Woody\Util\Image\ImageResource;
 
 class GraphView extends View  {
 
+  /**
+   * the dimension of the frame
+   *
+   * @var Dimension
+   */
   private $frmDimension = null;
 
+  /**
+   * the inset of the graph
+   *
+   * @var Dimension
+   */
+  private $imgInset = null;
+
+  /**
+   * the image holding th egraph
+   *
+   * @var Image
+   */
   private $imgGraph     = null;
-
-  private $imgDimension = null;
-
+  
+  /**
+   * the collection of states
+   *
+   * @var ArrayObject 
+   */
   private $states       = null;
 
+  /**
+   * the timer for repainting
+   *
+   * @var Timer
+   */
   private $repaintTimer = null;
 
   public function __construct(Point $topLeftCorner, Dimension $dimension) {
@@ -27,7 +52,6 @@ class GraphView extends View  {
 
     $this->frmDimension = $dimension;
     $this->imgInset     = new Dimension(-10, -20);
-    $this->imgDimension = $this->frmDimension->resizeBy($this->imgInset);
   }
 
   public function initialize() {
