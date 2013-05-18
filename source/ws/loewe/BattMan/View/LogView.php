@@ -53,7 +53,7 @@ class LogView extends View  {
     $this->txtLog->setValue($currentLog.$entry);
     
     if($this->chkDoLogToFile->isChecked()) {
-      file_put_contents('./battman.log', $currentLog.PHP_EOL, FILE_APPEND);
+      file_put_contents('./battman.log', trim($entry).PHP_EOL, FILE_APPEND);
     }
 
     unset($currentLog);
