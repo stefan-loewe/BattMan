@@ -87,13 +87,10 @@ class BatteryState implements Model {
 
   public function getTimeRemaining() {
     if($this->state->BatteryLifeTime === self::TIME_UNKNOWN) {
-      return 'unknown';
+      return 0;
     }
 
-    $date = new \DateTime();
-    $date->add(new \DateInterval('PT'.$this->state->BatteryLifeTime.'S'));
-
-    return $date->diff(new \DateTime())->format('%H:%I:%S');
+    return $this->state->BatteryLifeTime;
   }
 
   public function getTimeOnBattery() {

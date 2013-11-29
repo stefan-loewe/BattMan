@@ -28,7 +28,7 @@ class BattManApplication extends Application {
 
   private $updateTimer          = null;
   private $updateTimerInterval  = 1000;
-  
+
   private $isRunning            = FALSE;
   private $shutdownTimer        = null;
 
@@ -155,5 +155,18 @@ class BattManApplication extends Application {
    */
   public function stop() {
     $this->isRunning = FALSE;
+  }
+
+  /**
+   * This method is a utility method to format an amount of seconds in a human readable way.
+   *
+   * @param int $seconds the amount of seconds
+   * @return string the amount of seconds formatted in a human readable way
+   */
+  public static function formatSeconds($seconds) {
+    $date = new \DateTime();
+    $date->add(new \DateInterval('PT'.$seconds.'S'));
+
+    return $date->diff(new \DateTime())->format('%H:%I:%S');
   }
 }

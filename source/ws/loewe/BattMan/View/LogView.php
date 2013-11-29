@@ -2,6 +2,7 @@
 
 namespace ws\loewe\BattMan\View;
 
+use ws\loewe\BattMan\App\BattManApplication;
 use ws\loewe\BattMan\Model\Model;
 use ws\loewe\Utils\Geom\Dimension;
 use ws\loewe\Utils\Geom\Point;
@@ -18,18 +19,18 @@ class LogView extends View  {
    * @var Label
    */
   private $lblDoLogToFile = null;
-  
+
   /**
    * the checkbox for file logging
    *
    * @var Checkbox
    */
   private $chkDoLogToFile = null;
-  
+
   /**
    * the text area where to log is shown
    *
-   * @var EditArea 
+   * @var EditArea
    */
   private $txtLog         = null;
 
@@ -47,10 +48,10 @@ class LogView extends View  {
   public function initialize() {
     $this->frame->add($this->lblDoLogToFile = new Label('log to file:', Point::createInstance(10, 15), Dimension::createInstance(100, 15)));
     $this->frame->add($this->chkDoLogToFile = new Checkbox(0, Point::createInstance(152, 10), Dimension::createInstance(25, 25)));
-    
+
     $this->frame->add($this->txtLog = new EditArea('', Point::createInstance(10, 40), Dimension::createInstance(280, 240)));
     $this->txtLog->setReadOnly(TRUE);
-    
+
     $this->chkDoLogToFile->addActionListener(new ActionAdapter(function($event) {
       $dialog = new FileSaveDialog('Please enter the file name where to store the log.');
       $dialog->open();
@@ -67,12 +68,12 @@ class LogView extends View  {
     $entry .= ', '.$currentState->getPowerStatus();
     $entry .= ', '.$currentState->getBatteryStatus();
     $entry .= ', '.$currentState->getPercentRemaining().'%';
-    $entry .= ', '.$currentState->getTimeRemaining();
-    $entry .= ', '.$currentState->getTimeOnBattery();
+    $entry .= ', '.BattManApplication::formatSeconds($currentState->getTimeRemaining());
+    $entry .= ', '.BattManApplication::formatSeconds($currentState->getTimeOnBattery());
 
     $this->txtLog->setValue(null);
     $this->txtLog->setValue($currentLog.$entry);
-    
+
     if($this->chkDoLogToFile->isChecked() && $this->logFile != null) {
       file_put_contents($this->logFile, trim($entry).PHP_EOL, FILE_APPEND);
     }
