@@ -38,16 +38,16 @@ class BattManApplication extends Application {
   public function __construct() {
     parent::__construct();
 
-    $this->window = new ResizableWindow('ws\loewe\BattMan', new Point(50, 50), new Dimension(825, 525));
+    $this->window = new ResizableWindow('ws\loewe\BattMan', Point::createInstance(50, 50), Dimension::createInstance(825, 525));
 
     $this->window->create(null);
 
     $this->window->addWindowResizeListener(new WindowResizeAdapter(function(WindowResizeEvent $event) {
       $delta = $event->getDeltaDimension();
 
-      $this->graphView->resizeBy(new Dimension($delta->width, $delta->height));
-      $this->logView->resizeBy(new Dimension($delta->width, $delta->height));
-      $this->barPower->moveBy(new Dimension(0, $delta->height))->resizeBy(new Dimension($delta->width, 0));
+      $this->graphView->resizeBy(Dimension::createInstance($delta->width, $delta->height));
+      $this->logView->resizeBy(Dimension::createInstance($delta->width, $delta->height));
+      $this->barPower->moveBy(Dimension::createInstance(0, $delta->height))->resizeBy(Dimension::createInstance($delta->width, 0));
     }));
 
     $this->window->setWindowCloseListener(
@@ -88,28 +88,28 @@ class BattManApplication extends Application {
   }
 
   private function initTextView() {
-    $this->textView = new TextView(new Point(5, 5), new Dimension(300, 120));
+    $this->textView = new TextView(Point::createInstance(5, 5), Dimension::createInstance(300, 120));
 
     $this->window->getRootPane()->add($this->textView->getFrame());
     $this->textView->initialize();
   }
 
   private function initGraphView() {
-    $this->graphView = new GraphView(new Point(305, 5), new Dimension(500, 450));
+    $this->graphView = new GraphView(Point::createInstance(305, 5), Dimension::createInstance(500, 450));
 
     $this->window->getRootPane()->add($this->graphView->getFrame());
     $this->graphView->initialize();
   }
 
   private function initControlView() {
-    $this->controlView = new ControlView(new Point(5, 130), new Dimension(300, 50));
+    $this->controlView = new ControlView(Point::createInstance(5, 130), Dimension::createInstance(300, 50));
 
     $this->window->getRootPane()->add($this->controlView->getFrame());
     $this->controlView->initialize();
   }
 
   private function initLogView() {
-    $this->logView = new LogView(new Point(5, 185), new Dimension(300, 297));
+    $this->logView = new LogView(Point::createInstance(5, 185), Dimension::createInstance(300, 297));
 
     $this->window->getRootPane()->add($this->logView->getFrame());
     $this->logView->initialize();
@@ -121,7 +121,7 @@ class BattManApplication extends Application {
     $this->initGraphView();
     $this->initLogView();
 
-    $this->barPower = new ProgressBar(new Point(305, 465), new Dimension(500, 25));
+    $this->barPower = new ProgressBar(Point::createInstance(305, 465), Dimension::createInstance(500, 25));
     $this->window->getRootPane()->add($this->barPower);
     $this->barPower->setRange(0, 100);
 

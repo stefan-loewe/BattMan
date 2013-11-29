@@ -24,20 +24,20 @@ class TextView extends View {
   public function initialize() {
     $this->frame->setLayout($layout = new GridLayout(5, 2, 0, 0));
 
-    $this->frame->add(new Label('connected to power:', new Point(5, 5), new Dimension(15, 15)));
-    $this->frame->add($this->txtConnectedToAC = new EditBox('', new Point(25, 5), new Dimension(15, 15)));
+    $this->frame->add(new Label('connected to power:', Point::createInstance(5, 5), Dimension::createInstance(15, 15)));
+    $this->frame->add($this->txtConnectedToAC = new EditBox('', Point::createInstance(25, 5), Dimension::createInstance(15, 15)));
 
-    $this->frame->add(new Label('battery being charged:', new Point(5, 25), new Dimension(15, 15)));
-    $this->frame->add($this->txtIsCharging = new EditBox('', new Point(25, 25), new Dimension(15, 15)));
+    $this->frame->add(new Label('battery being charged:', Point::createInstance(5, 25), Dimension::createInstance(15, 15)));
+    $this->frame->add($this->txtIsCharging = new EditBox('', Point::createInstance(25, 25), Dimension::createInstance(15, 15)));
 
-    $this->frame->add(new Label('remaining battery life:', new Point(5, 45), new Dimension(15, 15)));
-    $this->frame->add($this->txtPercentLeft = new EditBox('', new Point(25, 45), new Dimension(15, 15)));
+    $this->frame->add(new Label('remaining battery life:', Point::createInstance(5, 45), Dimension::createInstance(15, 15)));
+    $this->frame->add($this->txtPercentLeft = new EditBox('', Point::createInstance(25, 45), Dimension::createInstance(15, 15)));
 
-    $this->frame->add(new Label('remaining battery time:', new Point(5, 65), new Dimension(15, 15)));
-    $this->frame->add($this->txtTimeLeft = new EditBox('', new Point(25, 65), new Dimension(15, 15)));
+    $this->frame->add(new Label('remaining battery time:', Point::createInstance(5, 65), Dimension::createInstance(15, 15)));
+    $this->frame->add($this->txtTimeLeft = new EditBox('', Point::createInstance(25, 65), Dimension::createInstance(15, 15)));
 
-    $this->frame->add(new Label('time running on battery:', new Point(5, 65), new Dimension(15, 15)));
-    $this->frame->add($this->txtTimeOnBattery = new EditBox('', new Point(25, 65), new Dimension(15, 15)));
+    $this->frame->add(new Label('time running on battery:', Point::createInstance(5, 65), Dimension::createInstance(15, 15)));
+    $this->frame->add($this->txtTimeOnBattery = new EditBox('', Point::createInstance(25, 65), Dimension::createInstance(15, 15)));
 
     $layout->layout($this->frame);
 
