@@ -23,12 +23,12 @@ class ControlView extends View  {
   public function initialize() {
     $this->frame->setLayout($layout = new GridLayout(2, 2, 0, 0));
 
-    $this->frame->add(new Label('dim display:', new Point(5, 5), new Dimension(15, 15)));
-    $this->chkDimDisplay = new Checkbox(0, new Point(10, 110), new Dimension(25, 25));
+    $this->frame->add(new Label('dim display:', Point::createInstance(5, 5), Dimension::createInstance(15, 15)));
+    $this->chkDimDisplay = new Checkbox(0, Point::createInstance(10, 110), Dimension::createInstance(25, 25));
     $this->frame->add($this->chkDimDisplay);
 
-    $this->frame->add(new Label('stay awake:', new Point(5, 5), new Dimension(15, 15)));
-    $this->chkStayAwake = new Checkbox(0, new Point(10, 140), new Dimension(25, 25));
+    $this->frame->add(new Label('stay awake:', Point::createInstance(5, 5), Dimension::createInstance(15, 15)));
+    $this->chkStayAwake = new Checkbox(0, Point::createInstance(10, 140), Dimension::createInstance(25, 25));
     $this->frame->add($this->chkStayAwake);
 
     $timerDisplayRequired = new Timer(function() {

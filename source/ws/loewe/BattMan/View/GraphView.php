@@ -51,7 +51,7 @@ class GraphView extends View  {
     parent::__construct($topLeftCorner, $dimension);
 
     $this->frmDimension = $dimension;
-    $this->imgInset     = new Dimension(-10, -20);
+    $this->imgInset     = Dimension::createInstance(-10, -20);
   }
 
   public function initialize() {
@@ -61,7 +61,7 @@ class GraphView extends View  {
   }
 
   private function initializeGraphImage($bitmap) {
-    $this->imgGraph = new Image($bitmap, new Point(5, 15), $this->frmDimension->resizeBy($this->imgInset));
+    $this->imgGraph = new Image($bitmap, Point::createInstance(5, 15), $this->frmDimension->resizeBy($this->imgInset));
 
     $this->frame->add($this->imgGraph);
   }
@@ -92,20 +92,20 @@ class GraphView extends View  {
 
     // force repaint of frame, image
     $this->frame->remove($this->imgGraph);
-    $this->imgGraph = new Image($bitmap, new Point(5, 15), $imageDimension);
+    $this->imgGraph = new Image($bitmap, Point::createInstance(5, 15), $imageDimension);
     $this->frame->add($this->imgGraph);
   }
 
   private function drawBackground($bitmap) {
-    $bitmap->drawRectangle(new Point(0, 0), $this->frmDimension->resizeBy($this->imgInset), 0xFFFFFF);
+    $bitmap->drawRectangle(Point::createInstance(0, 0), $this->frmDimension->resizeBy($this->imgInset), 0xFFFFFF);
 
     return $this;
   }
 
   private function drawGrid($bitmap) {
     for($x = 0; $x < $this->frame->getDimension()->width; $x += 10) {
-      $source = new Point($x, 0);
-      $target = new Point($x, $this->frmDimension->height - $this->imgInset->height);
+      $source = Point::createInstance($x, 0);
+      $target = Point::createInstance($x, $this->frmDimension->height - $this->imgInset->height);
       $bitmap->drawLine($source, $target, 0xFFC0A0);
     }
 
@@ -121,8 +121,8 @@ class GraphView extends View  {
     for($i = 0; $i < count($this->states) - $increment; $i = $i + $increment) {
       $sourceState = $this->states[$i];
       $targetState = $this->states[$i + $increment];
-      $source = new Point(($index - 1) * $stepWidth, $stepHeight * (100 - $sourceState->getPercentRemaining()));
-      $target = new Point($index * $stepWidth, $stepHeight * (100 - $targetState->getPercentRemaining()));
+      $source = Point::createInstance(($index - 1) * $stepWidth, $stepHeight * (100 - $sourceState->getPercentRemaining()));
+      $target = Point::createInstance($index * $stepWidth, $stepHeight * (100 - $targetState->getPercentRemaining()));
 
       $bitmap->drawLine($source, $target, 0x0000FF, 1);
       $index++;
@@ -137,8 +137,8 @@ class GraphView extends View  {
     for($i = 0; $i < 64; $i++) {
       $xOffset = (90 * $i) / $increment;
 
-      $source = new Point($xOffset, 0);
-      $target = new Point($xOffset, $this->frmDimension->height - $this->imgInset->height);
+      $source = Point::createInstance($xOffset, 0);
+      $target = Point::createInstance($xOffset, $this->frmDimension->height - $this->imgInset->height);
       $bitmap->drawLine($source, $target, 0xFFC0A0, 3);
     }
 
@@ -147,9 +147,9 @@ class GraphView extends View  {
 
   public function resizeBy(Dimension $delta) {
     $this->imgGraph->hide();
-    $this->frame->resizeBy(new Dimension($delta->width, $delta->height));
+    $this->frame->resizeBy(Dimension::createInstance($delta->width, $delta->height));
 
-    $this->frmDimension = $this->frmDimension->resizeBy(new Dimension($delta->width, $delta->height));
+    $this->frmDimension = $this->frmDimension->resizeBy(Dimension::createInstance($delta->width, $delta->height));
 
     if($this->repaintTimer !== null && $this->repaintTimer->isRunning()) {
       $this->repaintTimer->destroy();

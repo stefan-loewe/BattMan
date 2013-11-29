@@ -45,10 +45,10 @@ class LogView extends View  {
   }
 
   public function initialize() {
-    $this->frame->add($this->lblDoLogToFile = new Label('log to file:', new Point(10, 15), new Dimension(100, 15)));
-    $this->frame->add($this->chkDoLogToFile = new Checkbox(0, new Point(152, 10), new Dimension(25, 25)));
+    $this->frame->add($this->lblDoLogToFile = new Label('log to file:', Point::createInstance(10, 15), Dimension::createInstance(100, 15)));
+    $this->frame->add($this->chkDoLogToFile = new Checkbox(0, Point::createInstance(152, 10), Dimension::createInstance(25, 25)));
     
-    $this->frame->add($this->txtLog = new EditArea('', new Point(10, 40), new Dimension(280, 240)));
+    $this->frame->add($this->txtLog = new EditArea('', Point::createInstance(10, 40), Dimension::createInstance(280, 240)));
     $this->txtLog->setReadOnly(TRUE);
     
     $this->chkDoLogToFile->addActionListener(new ActionAdapter(function($event) {
@@ -84,8 +84,8 @@ class LogView extends View  {
 
   public function resizeBy(Dimension $delta) {
     // no grid layout, so we manually resize the frame and the text area where to the log is shown
-    $this->frame->resizeBy(new Dimension(0, $delta->height));
-    $this->txtLog->resizeBy(new Dimension(0, $delta->height));
+    $this->frame->resizeBy(Dimension::createInstance(0, $delta->height));
+    $this->txtLog->resizeBy(Dimension::createInstance(0, $delta->height));
 
     return $this;
   }
