@@ -1,0 +1,3 @@
+#!/bin/sh
+
+wine /home/loewe/workspace/programming/PHP/BattMan/dist/BattMan/php.exe $1
