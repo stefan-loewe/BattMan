@@ -2,12 +2,13 @@
 
 namespace ws\loewe\BattMan\View;
 
-use \ws\loewe\BattMan\Model\Model;
-use \ws\loewe\Utils\Geom\Dimension;
-use \ws\loewe\Utils\Geom\Point;
-use \ws\loewe\Woody\Components\Controls\EditBox;
-use \ws\loewe\Woody\Components\Controls\Label;
-use \ws\loewe\Woody\Layouts\GridLayout;
+use ws\loewe\BattMan\App\BattManApplication;
+use ws\loewe\BattMan\Model\Model;
+use ws\loewe\Utils\Geom\Dimension;
+use ws\loewe\Utils\Geom\Point;
+use ws\loewe\Woody\Components\Controls\EditBox;
+use ws\loewe\Woody\Components\Controls\Label;
+use ws\loewe\Woody\Layouts\GridLayout;
 
 class TextView extends View {
   private $txtConnectedToAC = null;
@@ -51,11 +52,8 @@ class TextView extends View {
     $this->txtConnectedToAC->setValue($currentState->getPowerStatus());
     $this->txtIsCharging->setValue($currentState->getBatteryStatus());
     $this->txtPercentLeft->setValue($currentState->getPercentRemaining());
-    $this->txtTimeLeft->setValue($currentState->getTimeRemaining());
-
-    $date = new \DateTime();
-    $date->add(new \DateInterval('PT'.($currentState->getTimeOnBattery()).'S'));
-    $this->txtTimeOnBattery->setValue($date->diff(new \DateTime())->format('%H:%I:%S'));
+    $this->txtTimeLeft->setValue(BattManApplication::formatSeconds($currentState->getTimeRemaining()));
+    $this->txtTimeOnBattery->setValue(BattManApplication::formatSeconds($currentState->getTimeOnBattery()));
 /*
     if($currentState->getPowerStatus() === 'offline') {
       $timeOnBattery = $this->txtTimeOnBattery->getValue();
