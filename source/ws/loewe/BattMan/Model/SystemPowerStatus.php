@@ -39,4 +39,9 @@ class SystemPowerStatus extends Structure {
    * This method acts as the constructor of the class.
    */
   public function __construct() {}
+
+  /**
+   * empty implementation to adhere to contract given by \Stackable
+   */
+  public function run() {}
 }

@@ -32,11 +32,11 @@ class GraphView extends View  {
    * @var Image
    */
   private $imgGraph     = null;
-  
+
   /**
    * the collection of states
    *
-   * @var ArrayObject 
+   * @var ArrayObject
    */
   private $states       = null;
 
@@ -70,26 +70,26 @@ class GraphView extends View  {
     return ImageResource::create($this->frmDimension->resizeBy($this->imgInset));
   }
 
-  public function update(Model $currentState) {
+  public function update($currentState) {
     $imageDimension = $this->frmDimension->resizeBy($this->imgInset);
-
+var_dump('graphing1');
     if($imageDimension->width === 0 || $imageDimension->height === 0) {
       return;
     }
-
+var_dump('graphing2');
     // only add the current state if collection is empty or last element is not same as current state
     // the latter might happen when adding it repeatedly during resizing
     if($this->states->count() == 0 || $this->states[$this->states->count() - 1] != $currentState) {
       $this->states[] = $currentState;
     }
-
+var_dump('graphing3');
     $bitmap = $this->initializeBitmap();
 
     $this->drawBackground($bitmap)
       ->drawGrid($bitmap)
       ->drawTimeLines($bitmap, $imageDimension)
       ->drawChart($bitmap, $imageDimension);
-
+var_dump('graphing4');
     // force repaint of frame, image
     $this->frame->remove($this->imgGraph);
     $this->imgGraph = new Image($bitmap, Point::createInstance(5, 15), $imageDimension);

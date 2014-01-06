@@ -18,7 +18,7 @@ use \ws\loewe\Utils\Geom\Dimension;
 
 class BattManApplication extends Application {
 
-  private $status               = null;
+  private $batteryMonitor       = null;
 
   private $textView             = null;
   private $graphView            = null;
@@ -35,7 +35,7 @@ class BattManApplication extends Application {
   /**
    * This method acts as the constructor of the class.
    */
-  public function __construct() {
+  public function __construct($batteryMonitor) {
     parent::__construct();
 
     $this->window = new ResizableWindow('ws\loewe\BattMan', Point::createInstance(50, 50), Dimension::createInstance(825, 525));
@@ -51,15 +51,24 @@ class BattManApplication extends Application {
     }));
 
     $this->window->setWindowCloseListener(
-            new \ws\loewe\Woody\Event\WindowCloseAdapter(
-                    function($event) {
-              $event->getSource()->close();
-              echo "\nGoodbye";}
-                    ));
+      new \ws\loewe\Woody\Event\WindowCloseAdapter(
+        function($event) {
+          $event->getSource()->close();
+
+          $this->stop();
+
+
+          echo "\nGoodbye";
+        }
+    ));
+
+    $this->batteryMonitor = $batteryMonitor;
 
     $this->shutdownTimer = new Timer($this->getShutdownCallback(), $this->window, 1000);
 
     $this->shutdownTimer->start();
+
+    $this->init();
   }
 
   // the callback that actually closes the window
@@ -80,7 +89,10 @@ class BattManApplication extends Application {
   public function start() {
     $this->isRunning = TRUE;
 
-    $this->init();
+    $this->batteryMonitor->attach($this->textView);
+    $this->batteryMonitor->attach($this->graphView);
+    //$this->batteryMonitor->attach($this->controlView);
+    $this->batteryMonitor->attach($this->logView);
 
     $this->window->startEventHandler();
 
@@ -127,24 +139,23 @@ class BattManApplication extends Application {
 
     // make view updates  periodically
     $updateCallback = function() {
-      $this->updateViews();
+      //$this->updateViews();
     };
     $this->updateTimer = new Timer($updateCallback, $this->window, $this->updateTimerInterval);
     $this->updateTimer->start();
 
-    $this->updateViews();
+    //$this->updateViews();
   }
 
   private function updateViews() {
-    $this->status = new BatteryState($this->status);
 
-    $this->textView->update($this->status);
-    $this->barPower->setProgress($this->status->getPercentRemaining());
+    $this->textView->update($this->batteryMonitor);
+    $this->barPower->setProgress($this->batteryMonitor->getPercentRemaining());
 
     // update log and graph only every 10th time
     if($this->updateTimer->getExecutionCount() % 10 === 0) {
-      $this->graphView->update($this->status);
-      $this->logView->update($this->status);
+      $this->graphView->update($this->batteryMonitor);
+      $this->logView->update($this->batteryMonitor);
     }
   }
 
@@ -165,8 +176,8 @@ class BattManApplication extends Application {
    */
   public static function formatSeconds($seconds) {
     $date = new \DateTime();
-    $date->add(new \DateInterval('PT'.$seconds.'S'));
+    //$date->add(new \DateInterval('PT'.$seconds.'S'));
 
-    return $date->diff(new \DateTime())->format('%H:%I:%S');
+    return '0';//$date->diff(new \DateTime())->format('%H:%I:%S');
   }
 }

@@ -49,7 +49,7 @@ class ControlView extends View  {
     $layout->layout($this->frame);
   }
 
-  public function update(Model $currentState) {
+  public function update($currentState) {
     $this->txtConnectedToAC->setValue($currentState->getPowerStatus());
     $this->txtIsCharging->setValue($currentState->getBatteryStatus());
     $this->txtPercentLeft->setValue($currentState->getPercentRemaining());

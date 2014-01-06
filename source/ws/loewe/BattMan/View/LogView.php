@@ -61,7 +61,7 @@ class LogView extends View  {
     }));
   }
 
-  public function update(Model $currentState) {
+  public function update($currentState) {
     $currentLog = $this->txtLog->getValue();
 
     $entry = (($currentLog === null) ? '' : PHP_EOL).date('H:i:s');

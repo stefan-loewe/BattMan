@@ -45,7 +45,6 @@ class BatteryState implements Model {
 
   private function initialize() {
     $this->state  = new SystemPowerStatus();
-
     WinApi::call('Kernel32::GetSystemPowerStatus', array($this->state));
   }
 
@@ -99,5 +98,14 @@ class BatteryState implements Model {
 
   public function getCreationTime() {
     return $this->creationTime;
+  }
+
+  public function __toString() {
+    return PHP_EOL.'connected to power: '.$this->getPowerStatus()
+      .PHP_EOL.'battery available:  '.$this->getBatteryStatus()
+      .PHP_EOL.'remaining battery:  '.$this->getPercentRemaining()
+      .PHP_EOL.'remaining runtime:  '.$this->getTimeRemaining()
+      .PHP_EOL.'time on battery:    '.$this->getTimeOnBattery()
+      .PHP_EOL.'time started:       '.$this->getCreationTime();
   }
 }

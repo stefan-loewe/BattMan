@@ -11,13 +11,16 @@ abstract class View {
 
   protected $frame = null;
 
+  public static $instances = null;
+  public $id = -1;
+
   public function __construct(Point $topLeftCorner, Dimension $dimension) {
     $this->frame = new Frame('', $topLeftCorner, $dimension);
   }
 
   abstract public function initialize();
 
-  abstract public function update(Model $model);
+  abstract public function update($model);
 
   public function getFrame() {
     return $this->frame;

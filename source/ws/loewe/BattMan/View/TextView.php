@@ -48,7 +48,8 @@ class TextView extends View {
     $this->txtTimeOnBattery->setReadOnly(TRUE);
   }
 
-  public function update(Model $currentState) {
+  public function update($currentState) {
+    var_dump($currentState->getTimeOnBattery());
     $this->txtConnectedToAC->setValue($currentState->getPowerStatus());
     $this->txtIsCharging->setValue($currentState->getBatteryStatus());
     $this->txtPercentLeft->setValue($currentState->getPercentRemaining());
