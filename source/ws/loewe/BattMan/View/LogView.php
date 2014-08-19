@@ -53,6 +53,10 @@ class LogView extends View  {
     $this->txtLog->setReadOnly(TRUE);
 
     $this->chkDoLogToFile->addActionListener(new ActionAdapter(function($event) {
+      if(!$this->chkDoLogToFile->isChecked()) {
+        return;
+      }
+
       $dialog = new FileSaveDialog('Please enter the file name where to store the log.');
       $dialog->open();
       if(($selection = $dialog->getSelection()) != null) {
