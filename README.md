@@ -5,11 +5,13 @@ BattMan is a tool to monitor battery usage. It is a client-side application base
 
 What is needed to run BattMan?
 ------------------------------
-You need to have PHP 5.4 installed, as well as the latest version of the [WinBinder extension](https://github.com/stefan-loewe/WinBinder/tree/master/binaries "WinBinder extension").
+You need to have PHP 5.4 or above installed, as well as the latest version of the [WinBinder extension](https://github.com/stefan-loewe/WinBinder/tree/master/binaries "WinBinder extension").
 
 Also activate the extension by adding the line
 `extension=winbinder_54_TS.dll`
 to your php.ini
+
+All this is taken care of if you get the easy-peasy binary distribution
 
 How to install BattMan?
 -----------------------
@@ -27,7 +29,7 @@ How to install BattMan?
 How to run BattMan?
 -------------------
 After having installed BattMan and the respective dependencies, just run  
-`php bootstrap.php`
+`php bootstrap.php`, or `php BattMan.phar` if you want to run it from the phar archive.
 
 Which operating system does BattMan need?
 -----------------------------------------
