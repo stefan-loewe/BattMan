@@ -59,8 +59,15 @@ class LogView extends View  {
 
       $dialog = new FileSaveDialog('Please enter the file name where to store the log.');
       $dialog->open();
+
+      // set log file if user provided a file via the dialog
       if(($selection = $dialog->getSelection()) != null) {
         $this->logFile = $selection;
+      }
+
+      // with no file selected, reset checkbox to unchecked state
+      else {
+        $this->chkDoLogToFile->setChecked(FALSE);
       }
     }));
   }
