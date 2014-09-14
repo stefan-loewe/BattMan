@@ -2,13 +2,15 @@
 
 namespace ws\loewe\BattMan\View;
 
-use \ws\loewe\BattMan\App\BattManApplication;
-use \ws\loewe\BattMan\Components\Timer\RunOnceTimer;
-use \ws\loewe\BattMan\Model\Model;
-use \ws\loewe\Utils\Geom\Dimension;
-use \ws\loewe\Utils\Geom\Point;
-use \ws\loewe\Woody\Components\Controls\Image;
-use \ws\loewe\Woody\Util\Image\ImageResource;
+use ArrayObject;
+use ws\loewe\BattMan\App\BattManApplication;
+use ws\loewe\BattMan\Model\Model;
+use ws\loewe\Utils\Geom\Dimension;
+use ws\loewe\Utils\Geom\Point;
+use ws\loewe\Woody\Components\Controls\Image;
+use ws\loewe\Woody\Components\Timer\RunOnceTimer;
+use ws\loewe\Woody\Components\Timer\Timer;
+use ws\loewe\Woody\Util\Image\ImageResource;
 
 class GraphView extends View  {
 
@@ -32,11 +34,11 @@ class GraphView extends View  {
    * @var Image
    */
   private $imgGraph     = null;
-  
+
   /**
    * the collection of states
    *
-   * @var ArrayObject 
+   * @var ArrayObject
    */
   private $states       = null;
 
@@ -57,7 +59,7 @@ class GraphView extends View  {
   public function initialize() {
     $this->initializeGraphImage($this->initializeBitmap());
 
-    $this->states = new \ArrayObject();
+    $this->states = new ArrayObject();
   }
 
   private function initializeGraphImage($bitmap) {
@@ -158,6 +160,9 @@ class GraphView extends View  {
     $this->repaintTimer = new RunOnceTimer(
       function() {
         $this->update($this->states[$this->states->count() - 1]);
+
+        // forecful-repaint
+        BattManApplication::getInstance()->getWindow()->getRootPane()->hide()->show();
       },
       BattManApplication::getInstance()->getWindow(),
       500);
