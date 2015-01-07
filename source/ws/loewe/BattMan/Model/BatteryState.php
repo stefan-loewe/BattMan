@@ -79,7 +79,7 @@ class BatteryState implements Model {
 
   public function getPercentRemaining() {
     if($this->state->BatteryLifePercent === self::PERCENTAGE_UNKNOWN) {
-      return 'unknown';
+      return 0;
     }
 
     return $this->state->BatteryLifePercent;

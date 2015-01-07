@@ -74,18 +74,14 @@ class BattManApplication extends Application {
 
   /**
    * This method starts the application.
-   *
-   * @return \ws\loewe\BattMan\App\ws\loewe\BattManApplication $this
    */
   public function start() {
     $this->isRunning = TRUE;
 
     $this->init();
 
-    $this->window->startEventHandler();
-
-    return $this;
-  }
+    parent::start();
+ }
 
   private function initTextView() {
     $this->textView = new TextView(Point::createInstance(5, 5), Dimension::createInstance(300, 120));
